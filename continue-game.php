@@ -21,4 +21,6 @@ echo '
     <div style="flex: 2; text-align: left;">' . number_format($status['gold']) . '</div>
   </div>
 ';
+
+var_dump($userName);
 ?>
