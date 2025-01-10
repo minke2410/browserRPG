@@ -28,6 +28,7 @@ class User {
         $this->userId = $username;  // セッションからのユーザー名を受け取る
         $this->loadUserData();
         $this->loadCharacters();
+        $this->loadItems();
     }
 
     // ユーザー情報をデータベースから取得
@@ -57,10 +58,14 @@ class User {
     }
 
     private function loadItems() {
-        $sql = "SELECT item_name FROM items WHERE user_id = :user_id";
+        // inventories テーブルから所持しているアイテムの情報を取得
+        $sql = "SELECT i.item_name 
+                FROM inventories iv 
+                JOIN items i ON iv.item_id = i.id 
+                WHERE iv.user_id = :user_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['user_id' => $this->userId]);
-        $this->items = $stmt->fetchAll(PDO::FETCH_COLUMN);  // 1列だけ取得
+        $this->items = $stmt->fetchAll(PDO::FETCH_COLUMN);  // 所持アイテム名を取得
     }
 }
 
