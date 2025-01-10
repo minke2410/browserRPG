@@ -51,7 +51,7 @@ class User {
     // ユーザーのキャラクターをデータベースから取得
     private function loadCharacters() {
         // ユーザーのキャラクター情報を取得
-        $sql = "SELECT name FROM characters WHERE user_id = :user_id";
+        $sql = "SELECT name FROM characters_inventory WHERE user_id = :user_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['user_id' => $this->userId]);  // user_idを使ってキャラクターを取得
         $this->characters = $stmt->fetchAll(PDO::FETCH_COLUMN);  // 1列だけ取得
