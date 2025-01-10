@@ -27,6 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       ':name' => $mcName
     ]);
     echo '主人公"'. $mcName. '"が作成されました｡';
+    echo '<p>さあ､冒険に出ましょう｡</p>';
+    echo '<a href="continue-game.php">冒険を続ける</a>';
+
   } catch (PDOException $e) {
     die('データベースエラー: ' . $e->getMessage());
   }

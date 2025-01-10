@@ -58,9 +58,9 @@ class User {
     }
 
     private function loadItems() {
-        // inventories テーブルから所持しているアイテムの情報を取得
+        // items_inventory テーブルから所持しているアイテムの情報を取得
         $sql = "SELECT i.item_name 
-                FROM inventories iv 
+                FROM items_inventory iv 
                 JOIN items i ON iv.item_id = i.id 
                 WHERE iv.user_id = :user_id";
         $stmt = $this->pdo->prepare($sql);

@@ -12,8 +12,8 @@ $userId = $_SESSION['user_id'];
 
 try {
     // charactersテーブルで、ユーザーIDに対応する主人公が存在するか確認
-    $stmt = $pdo->prepare('SELECT COUNT(*) FROM characters WHERE id = :id');
-    $stmt->execute([':id' => $userId]);
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM characters WHERE user_id = :user_id');
+    $stmt->execute([':user_id' => $userId]);
     $characterCount = $stmt->fetchColumn();
 
     // 主人公が作成されていない場合
