@@ -51,21 +51,23 @@ class User {
     // ユーザーのキャラクターをデータベースから取得
     private function loadCharacters() {
         // ユーザーのキャラクター情報を取得
-        $sql = "SELECT name FROM characters_inventory WHERE user_id = :user_id";
+        $sql = "SELECT name, level, hp, attack, xp 
+                FROM characters_inventory 
+                WHERE user_id = :user_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['user_id' => $this->userId]);  // user_idを使ってキャラクターを取得
-        $this->characters = $stmt->fetchAll(PDO::FETCH_COLUMN);  // 1列だけ取得
+        $this->characters = $stmt->fetchAll(PDO::FETCH_ASSOC);  // 詳細情報をすべて取得
     }
 
     private function loadItems() {
-        // items_inventory テーブルから所持しているアイテムの情報を取得
-        $sql = "SELECT i.item_name 
+        // items_inventory テーブルと items テーブルを結合して詳細情報を取得
+        $sql = "SELECT i.item_name, iv.quantity 
                 FROM items_inventory iv 
                 JOIN items i ON iv.item_id = i.id 
                 WHERE iv.user_id = :user_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['user_id' => $this->userId]);
-        $this->items = $stmt->fetchAll(PDO::FETCH_COLUMN);  // 所持アイテム名を取得
+        $this->items = $stmt->fetchAll(PDO::FETCH_ASSOC);  // 詳細情報を全て取得
     }
 }
 

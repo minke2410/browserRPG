@@ -49,24 +49,36 @@ try {
 
     <!-- コンテンツ -->
     <div id="content">
-      <div id="characters" style="display: none;">
+      <!-- キャラクター情報の表示 -->
+      <div id="characters">
         <h3>所持キャラクター一覧</h3>
         <ul>
           <?php if (!empty($characters)): ?>
             <?php foreach ($characters as $character): ?>
-              <li><?= htmlspecialchars($character, ENT_QUOTES, 'UTF-8') ?></li>
+              <li>
+                <strong>名前:</strong> <?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>レベル:</strong> <?= htmlspecialchars($character['level'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>HP:</strong> <?= htmlspecialchars($character['hp'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>攻撃力:</strong> <?= htmlspecialchars($character['attack'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>経験値:</strong> <?= htmlspecialchars($character['xp'], ENT_QUOTES, 'UTF-8') ?><br>
+              </li>
             <?php endforeach; ?>
           <?php else: ?>
             <li>キャラクターがいません。</li>
           <?php endif; ?>
         </ul>
       </div>
-      <div id="items" style="display: none;">
+
+      <!-- アイテム情報の表示 -->
+      <div id="items">
         <h3>所持アイテム一覧</h3>
         <ul>
           <?php if (!empty($items)): ?>
             <?php foreach ($items as $item): ?>
-              <li><?= htmlspecialchars($item, ENT_QUOTES, 'UTF-8') ?></li>
+              <li>
+                <strong>アイテム名:</strong> <?= htmlspecialchars($item['item_name'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong>個数:</strong> <?= htmlspecialchars($item['quantity'], ENT_QUOTES, 'UTF-8') ?><br>
+              </li>
             <?php endforeach; ?>
           <?php else: ?>
             <li>アイテムがありません。</li>
@@ -84,5 +96,16 @@ try {
     document.querySelectorAll('#content > div').forEach(div => div.style.display = 'none');
     // 指定されたセクションを表示
     document.getElementById(sectionId).style.display = 'block';
+    // URLパラメータを更新
+    const url = new URL(window.location.href);
+    url.searchParams.set('section', sectionId);
+    history.replaceState(null, '', url);
   }
+
+  // ページロード時にURLパラメータからセクションを選択
+  window.onload = function() {
+    const url = new URL(window.location.href);
+    const section = url.searchParams.get('section') || 'characters'; // デフォルトは'characters'
+    showSection(section);
+  };
 </script>
