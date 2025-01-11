@@ -11,7 +11,7 @@ class Character {
     }
 
     private function loadCharacters() {
-        $sql = "SELECT id, name, level, hp, attack, xp 
+        $sql = "SELECT id, name, level, hp, attack, xp, updated_at
                 FROM characters_inventory 
                 WHERE user_id = :user_id";
         $stmt = $this->pdo->prepare($sql);
