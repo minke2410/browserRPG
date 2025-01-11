@@ -24,9 +24,13 @@ try {
     die("Error: " . $e->getMessage());
 }
 ?>
-<div style="display: flex; width: 100%; height: 100vh;">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<div class="content-wrapper">
   <!-- 左側: ユーザー情報 -->
-  <div style="width: 50%; padding: 10px; box-sizing: border-box;">
+  <div class="left-panel">
     <div style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; display: flex; justify-content: space-between; align-items: center;">
       <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
         <div style="font-weight: bold;">ユーザ名：</div>
@@ -40,9 +44,9 @@ try {
   </div>
 
   <!-- 右側: ナビゲーションバーとコンテンツ -->
-  <div style="width: 50%; padding: 10px; border-left: 1px solid #ddd; box-sizing: border-box;">
+  <div class="right-panel">
     <!-- ナビゲーションバー -->
-    <div style="display: flex; justify-content: space-around; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+    <div class="nav-bar">
       <button onclick="showSection('characters')" style="padding: 5px 10px;">キャラクター</button>
       <button onclick="showSection('items')" style="padding: 5px 10px;">アイテム</button>
     </div>
@@ -56,11 +60,15 @@ try {
           <?php if (!empty($characters)): ?>
             <?php foreach ($characters as $character): ?>
               <li>
-                <strong>名前:</strong> <?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?><br>
-                <strong>レベル:</strong> <?= htmlspecialchars($character['level'], ENT_QUOTES, 'UTF-8') ?><br>
-                <strong>HP:</strong> <?= htmlspecialchars($character['hp'], ENT_QUOTES, 'UTF-8') ?><br>
-                <strong>攻撃力:</strong> <?= htmlspecialchars($character['attack'], ENT_QUOTES, 'UTF-8') ?><br>
-                <strong>経験値:</strong> <?= htmlspecialchars($character['xp'], ENT_QUOTES, 'UTF-8') ?><br>
+                <strong class="character-name" onclick="toggleCharacterDetails(<?= intval($character['id']) ?>)">
+                  <?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?>
+                </strong>
+                <div id="details-<?= $character['id'] ?>" style="display: none; padding-left: 20px;">
+                  <strong>レベル:</strong> <?= htmlspecialchars($character['level'], ENT_QUOTES, 'UTF-8') ?><br>
+                  <strong>HP:</strong> <?= htmlspecialchars($character['hp'], ENT_QUOTES, 'UTF-8') ?><br>
+                  <strong>攻撃力:</strong> <?= htmlspecialchars($character['attack'], ENT_QUOTES, 'UTF-8') ?><br>
+                  <strong>経験値:</strong> <?= htmlspecialchars($character['xp'], ENT_QUOTES, 'UTF-8') ?><br>
+                </div>
               </li>
             <?php endforeach; ?>
           <?php else: ?>
@@ -108,4 +116,14 @@ try {
     const section = url.searchParams.get('section') || 'characters'; // デフォルトは'characters'
     showSection(section);
   };
+
+  // キャラクター詳細を表示/非表示にする関数
+  function toggleCharacterDetails(characterId) {
+    const details = document.getElementById('details-' + characterId);
+    if (details.style.display === 'none') {
+      details.style.display = 'block';
+    } else {
+      details.style.display = 'none';
+    }
+  }
 </script>

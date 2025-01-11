@@ -51,7 +51,7 @@ class User {
     // ユーザーのキャラクターをデータベースから取得
     private function loadCharacters() {
         // ユーザーのキャラクター情報を取得
-        $sql = "SELECT name, level, hp, attack, xp 
+        $sql = "SELECT id, name, level, hp, attack, xp 
                 FROM characters_inventory 
                 WHERE user_id = :user_id";
         $stmt = $this->pdo->prepare($sql);
