@@ -63,7 +63,7 @@ try {
                 <strong class="character-name" onclick="toggleCharacterDetails(<?= intval($character['id']) ?>)">
                   <?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?>
                 </strong>
-                <div id="details-<?= $character['id'] ?>" style="display: none; padding-left: 20px;">
+                <div id="details-<?= $character['id'] ?>" class="character-details hidden" style="padding-left: 20px;">
                   <strong>レベル:</strong> <?= htmlspecialchars($character['level'], ENT_QUOTES, 'UTF-8') ?><br>
                   <strong>HP:</strong> <?= htmlspecialchars($character['hp'], ENT_QUOTES, 'UTF-8') ?><br>
                   <strong>攻撃力:</strong> <?= htmlspecialchars($character['attack'], ENT_QUOTES, 'UTF-8') ?><br>
@@ -77,6 +77,7 @@ try {
         </ul>
       </div>
 
+
       <!-- アイテム情報の表示 -->
       <div id="items">
         <h3>所持アイテム一覧</h3>
@@ -84,8 +85,10 @@ try {
           <?php if (!empty($items)): ?>
             <?php foreach ($items as $item): ?>
               <li>
-                <strong>アイテム名:</strong> <?= htmlspecialchars($item['item_name'], ENT_QUOTES, 'UTF-8') ?><br>
-                <strong>個数:</strong> <?= htmlspecialchars($item['quantity'], ENT_QUOTES, 'UTF-8') ?><br>
+                <div class="item-info">
+                  <strong><?= htmlspecialchars($item['item_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
+                  <span><?= htmlspecialchars($item['quantity'], ENT_QUOTES, 'UTF-8') ?>個</span>
+                </div>
               </li>
             <?php endforeach; ?>
           <?php else: ?>
@@ -119,11 +122,21 @@ try {
 
   // キャラクター詳細を表示/非表示にする関数
   function toggleCharacterDetails(characterId) {
+    // クリックされたキャラクターの詳細の要素を取得
     const details = document.getElementById('details-' + characterId);
-    if (details.style.display === 'none') {
-      details.style.display = 'block';
+
+    // すべての詳細を非表示にする
+    const allDetails = document.querySelectorAll('.character-details');
+    allDetails.forEach(detail => {
+      detail.classList.add('hidden');  // hiddenクラスを追加して非表示にする
+    });
+
+    // クリックされたキャラクターの詳細をトグル（表示/非表示）
+    if (details.style.display === 'none' || details.style.display === '') {
+      details.style.display = 'block';  // 詳細を表示
     } else {
-      details.style.display = 'none';
+      details.style.display = 'none';   // 詳細を隠す
     }
   }
+
 </script>

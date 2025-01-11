@@ -51,24 +51,33 @@ html, body {
   margin-bottom: 10px;
 }
 
+/* hiddenクラスで非表示にする */
+.hidden {
+  display: none;
+}
+
+/* クリック可能に見せるスタイル（ボタン風） */
 .character-name {
   cursor: pointer;
-  display: inline-block;
-  padding: 6px 12px; /* ボタン風の余白 */
-  background-color: #5a6268; /* 控えめな背景色 */
-  color: white; /* 文字色 */
-  border-radius: 4px; /* 角を丸く */
-  text-align: center;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  font-weight: bold; /* 強調 */
+  color: #007bff;  /* 青色 */
 }
 
 .character-name:hover {
-  background-color: #4e555b; /* ホバー時に少し濃くする */
-  transform: scale(1.05); /* ホバー時に少し拡大 */
+  text-decoration: underline;  /* ホバー時に下線を表示 */
 }
 
 .character-name:active {
   background-color: #3e4449; /* クリック時に色をさらに濃く */
   transform: scale(0.95); /* クリック時に少し縮小 */
+}
+
+/* アイテム名と個数を横並びにするスタイル */
+.item-info {
+  display: flex;
+  gap: 10px; /* アイテム名と個数の間隔を調整 */
+  align-items: center; /* アイテム名と個数を縦方向にセンタリング */
+}
+
+.item-info strong {
+  margin-right: 5px; /* アイテム名と個数の間に少し間隔を空ける */
 }
