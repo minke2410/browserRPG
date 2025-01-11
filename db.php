@@ -1,9 +1,9 @@
 <?php
 class Database {
     private $host = 'localhost';
-    private $dbname = 'ブラウザRPG';
-    private $username = 'root';
-    private $password = 'Usami71524';
+    private $dbname = 'rpg';
+    private $username = 'minke';
+    private $password = 'Usami71524!';
     private $pdo;
 
     public function __construct() {

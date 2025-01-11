@@ -1,7 +1,11 @@
 <?php
 session_start(); // セッション開始
 
-require_once 'database.php'; // データベース接続を含むファイル
+require_once 'db.php'; // データベース接続を含むファイル
+
+// データベース接続を取得
+$database = new Database();
+$pdo = $database->getConnection();
 
 // ログインしているユーザーIDを取得
 if (!isset($_SESSION['user_id'])) {

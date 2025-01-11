@@ -128,4 +128,28 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
     url.searchParams.set('section', sectionId);
     window.location.href = url.toString(); // URLを更新してページをリロード
   }
+
+  // キャラクターの詳細情報をトグル（表示/非表示）する関数
+  function toggleCharacterDetails(characterId) {
+    // すべてのキャラクター詳細を取得
+    const allDetails = document.querySelectorAll('.character-details');
+    
+    // 他のキャラクターの詳細情報を非表示にする
+    allDetails.forEach(detail => {
+      // 他のキャラクターの詳細が表示されていれば非表示にする
+      if (detail.id !== 'details-' + characterId) {
+        detail.style.display = 'none';
+      }
+    });
+
+    // クリックされたキャラクターの詳細をトグル
+    const detailsDiv = document.getElementById('details-' + characterId);
+    
+    // 詳細情報の表示状態を切り替え
+    if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+      detailsDiv.style.display = 'block';
+    } else {
+      detailsDiv.style.display = 'none';
+    }
+  }
 </script>
