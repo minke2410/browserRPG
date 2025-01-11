@@ -15,13 +15,16 @@ if (isset($_SESSION['message'])) {
     <title>ブラウザRPG | アカウント作成</title>
 </head>
 <body>
-    <h2>アカウント</h2>
+    <h2>アカウント作成</h2>
     <form action="signup.php" method="POST">
         <label for="username">ユーザー名:</label>
-        <input type="text" id="username" name="username" required><br><br>
+        <input type="text" id="username" name="username" required><br>
         
         <label for="password">パスワード:</label>
-        <input type="password" id="password" name="password" required><br><br>
+        <input type="password" id="password" name="password" required><br>
+
+        <label for="confirm_password">パスワード確認:</label>
+        <input type="password" name="confirm_password" required><br>
         
         <button type="submit">作成</button>
     </form>

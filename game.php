@@ -1,7 +1,7 @@
 <?php
 session_start(); // セッション開始
 
-require_once 'db.php'; // データベース接続を含むファイル
+require_once 'database.php'; // データベース接続を含むファイル
 
 // ログインしているユーザーIDを取得
 if (!isset($_SESSION['user_id'])) {
@@ -43,20 +43,23 @@ try {
     $stmt->execute([':user_id' => $userId]);
     $characters = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // キャラクター情報を表示
-    echo '<h3>キャラクター情報</h3>';
-    foreach ($characters as $character) {
-        echo '<p>名前: ' . htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') . '</p>';
-        echo '<p>レベル: ' . $character['level'] . '</p>';
-        echo '<p>HP: ' . $character['hp'] . '</p>';
-        echo '<p>XP: ' . $character['xp'] . '</p>';
-        echo '<p>攻撃力: ' . $character['attack'] . '</p>';
-        echo '<p>最終更新: ' . $character['updated_at'] . '</p>';
-        echo '<hr>';
+    // キャラクター情報があれば表示
+    if (!empty($characters)) {
+        echo '<h3>キャラクター情報</h3>';
+        foreach ($characters as $character) {
+            echo '<p>名前: ' . htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') . '</p>';
+            echo '<p>レベル: ' . $character['level'] . '</p>';
+            echo '<p>HP: ' . $character['hp'] . '</p>';
+            echo '<p>XP: ' . $character['xp'] . '</p>';
+            echo '<p>攻撃力: ' . $character['attack'] . '</p>';
+            echo '<p>最終更新: ' . $character['updated_at'] . '</p>';
+            echo '<hr>';
+        }
     }
 
 } catch (PDOException $e) {
     // エラーハンドリング（データベースエラー発生時）
     die('データベースエラー: ' . $e->getMessage());
 }
+
 ?>

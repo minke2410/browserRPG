@@ -1,29 +1,50 @@
 <?php
-
 session_start();
 
-require_once 'db.php';
+require_once 'db.php';         // Databaseクラスを読み込み
+require_once 'User.php';       // Userクラスを読み込み
+require_once 'Character.php';  // Characterクラスを読み込み
+require_once 'Item.php';       // Itemクラスを読み込み
 
-// セッションにusernameが設定されていない場合、エラーメッセージを表示
-if (!isset($_SESSION['username'])) {
-    die("ユーザー名がセッションに設定されていません");
+// セッションにユーザーIDが設定されていない場合、エラーメッセージを表示
+if (!isset($_SESSION['user_id'])) {
+    die("ユーザーIDがセッションに設定されていません");
 }
 
-$userName = $_SESSION['username'];
+$userId = $_SESSION['user_id'];
+
+// セクションがURLパラメータで指定された場合、セッションに保存
+if (isset($_GET['section'])) {
+    $_SESSION['section'] = $_GET['section'];
+}
 
 try {
-    // Userクラスのインスタンスを作成（usernameをuserIdに変更）
-    $user = new User($pdo, $userName);
+    // データベース接続を取得
+    $db = new Database();
+    $pdo = $db->getConnection();
 
-    // ユーザー情報を取得
+    // Userクラスのインスタンスを作成してユーザー情報を取得
+    $user = new User($pdo, $userId);
     $userName = htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8');
     $userGold = number_format($user->gold);
-    $characters = $user->characters;
-    $items = $user->items;
+
+    // Characterクラスのインスタンスを作成してキャラクター情報を取得
+    $character = new Character($pdo, $userId);
+    $characters = $character->getCharacters();
+
+    // Itemクラスのインスタンスを作成してアイテム情報を取得
+    $item = new Item($pdo, $userId);
+    $items = $item->getItems();
+
 } catch (Exception $e) {
-    die("Error: " . $e->getMessage());
+    die("エラー: " . $e->getMessage());
 }
+
+// デフォルトセクションを設定（セッションが空の場合）
+$currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characters';
+
 ?>
+
 <head>
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -33,12 +54,12 @@ try {
   <div class="left-panel">
     <div style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; display: flex; justify-content: space-between; align-items: center;">
       <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-        <div style="font-weight: bold;">ユーザ名：</div>
+        <div style="font-weight: bold;">ユーザー名：</div>
         <div><?= htmlspecialchars($userName, ENT_QUOTES, 'UTF-8') ?></div>
       </div>
       <div style="display: flex; align-items: center; gap: 10px; flex: 0.8;">
         <div style="font-weight: bold;">所持金：</div>
-        <div><?= number_format($user->gold) ?></div>
+        <div><?= $userGold ?></div>
       </div>
     </div>
   </div>
@@ -54,7 +75,7 @@ try {
     <!-- コンテンツ -->
     <div id="content">
       <!-- キャラクター情報の表示 -->
-      <div id="characters">
+      <div id="characters" style="<?= $currentSection === 'characters' ? 'display:block;' : 'display:none;' ?>">
         <h3>所持キャラクター一覧</h3>
         <ul>
           <?php if (!empty($characters)): ?>
@@ -77,9 +98,8 @@ try {
         </ul>
       </div>
 
-
       <!-- アイテム情報の表示 -->
-      <div id="items">
+      <div id="items" style="<?= $currentSection === 'items' ? 'display:block;' : 'display:none;' ?>">
         <h3>所持アイテム一覧</h3>
         <ul>
           <?php if (!empty($items)): ?>
@@ -103,40 +123,9 @@ try {
 <script>
   // セクション表示制御
   function showSection(sectionId) {
-    // 全セクションを非表示
-    document.querySelectorAll('#content > div').forEach(div => div.style.display = 'none');
-    // 指定されたセクションを表示
-    document.getElementById(sectionId).style.display = 'block';
-    // URLパラメータを更新
+    // セッションに現在のセクションを保存
     const url = new URL(window.location.href);
     url.searchParams.set('section', sectionId);
-    history.replaceState(null, '', url);
+    window.location.href = url.toString(); // URLを更新してページをリロード
   }
-
-  // ページロード時にURLパラメータからセクションを選択
-  window.onload = function() {
-    const url = new URL(window.location.href);
-    const section = url.searchParams.get('section') || 'characters'; // デフォルトは'characters'
-    showSection(section);
-  };
-
-  // キャラクター詳細を表示/非表示にする関数
-  function toggleCharacterDetails(characterId) {
-    // クリックされたキャラクターの詳細の要素を取得
-    const details = document.getElementById('details-' + characterId);
-
-    // すべての詳細を非表示にする
-    const allDetails = document.querySelectorAll('.character-details');
-    allDetails.forEach(detail => {
-      detail.classList.add('hidden');  // hiddenクラスを追加して非表示にする
-    });
-
-    // クリックされたキャラクターの詳細をトグル（表示/非表示）
-    if (details.style.display === 'none' || details.style.display === '') {
-      details.style.display = 'block';  // 詳細を表示
-    } else {
-      details.style.display = 'none';   // 詳細を隠す
-    }
-  }
-
 </script>
