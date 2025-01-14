@@ -6,6 +6,7 @@ require_once 'User.php';       // Userクラスを読み込み
 require_once 'Character.php';  // Characterクラスを読み込み
 require_once 'Item.php';       // Itemクラスを読み込み
 require_once 'Enemy.php';       // Enemyクラスを読み込み
+require_once 'Party.php';       // Partyクラスを読み込み
 
 // セッションにユーザーIDが設定されていない場合、エラーメッセージを表示
 if (!isset($_SESSION['user_id'])) {
@@ -37,9 +38,13 @@ try {
     $item = new Item($pdo, $userId);
     $items = $item->getItems();
 
-    // 敵情報を取得
+    // Enemyクラスのインスタンスを作成して敵情報を取得
     $enemy = new Enemy($pdo);
     $enemies = $enemy->getEnemies();
+
+    // Partyクラスのインスタンスを作成してパーティー情報を取得
+    $party = new Party($pdo, $userId);
+    $parties = $enemy->getParties();
 
 } catch (Exception $e) {
     die("エラー: " . $e->getMessage());
@@ -88,6 +93,7 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
     <!-- ナビゲーションバー -->
     <div class="nav-bar">
       <button onclick="showSection('characters')" style="padding: 5px 10px;">キャラクター</button>
+      <button onclick="showSection('parties')" style="padding: 5px 10px;">編成</button>
       <button onclick="showSection('items')" style="padding: 5px 10px;">アイテム</button>
     </div>
   
@@ -113,6 +119,26 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
             <?php endforeach; ?>
           <?php else: ?>
             <li>キャラクターがいません。</li>
+          <?php endif; ?>
+        </ul>
+      </div>
+
+      <!-- 編成情報の表示 -->
+      <div id="parties" style="<?= $currentSection === 'parties' ? 'display:block;' : 'display:none;' ?>">
+        <h3>アクティブパーティー一覧</h3>
+        <ul>
+          <?php if (!empty($parties)): ?>
+            <?php foreach ($parties as $party): ?>
+              <li>
+                <strong><?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
+                <span>メンバー1: <?= htmlspecialchars($party['member1'], ENT_QUOTES, 'UTF-8') ?></span><br>
+                <span>メンバー2: <?= htmlspecialchars($party['member2'], ENT_QUOTES, 'UTF-8') ?></span><br>
+                <span>メンバー3: <?= htmlspecialchars($party['member3'], ENT_QUOTES, 'UTF-8') ?></span><br>
+                <span>メンバー4: <?= htmlspecialchars($party['member4'], ENT_QUOTES, 'UTF-8') ?></span><br>
+              </li>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <li>アクティブなパーティーがありません。</li>
           <?php endif; ?>
         </ul>
       </div>

@@ -47,7 +47,7 @@ function showCharacterCreationForm() {
 function showCharacterData($characters) {
     echo '<h2>セーブデータを確認しました｡</h2>';
     echo '<p>さあ､冒険に出ましょう｡</p>';
-    echo '<a href="continue-game.php">冒険を続ける</a>';
+    echo '<a href="game-main.php">冒険を続ける</a>';
 
     // 最初のキャラクターを取得（リストから最初のキャラクター）
     $character = $characters[0]; 

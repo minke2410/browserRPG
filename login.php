@@ -55,7 +55,7 @@ if (isset($_SESSION['message'])) {
                 // ログイン成功時にユーザーIDをセッションに保存
                 $_SESSION['user_id'] = $user['id']; // ユーザーIDをセッションに保存
                 $_SESSION['message'] = 'ログイン成功！';
-                header('Location: game.php'); // ログイン後のダッシュボードページにリダイレクト
+                header('Location: game-intro.php'); // ログイン後のダッシュボードページにリダイレクト
                 exit;
             } else {
                 $_SESSION['message'] = 'パスワードが間違っています。';
