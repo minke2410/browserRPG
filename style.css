@@ -5,27 +5,61 @@ html, body {
 }
 
 .content-wrapper {
-  display: flex;
-  width: 100%;
-  height: 100%;
+  display: flex; /* 左右のパネルを横並びにするためにflexboxを使う */
+  width: 100%; /* 全幅 */
+  height: 100vh; /* 全高 */
+  position: relative; /* 子要素の絶対配置を基準に */
 }
 
 /* 左側: ユーザー情報 */
 .left-panel {
-  width: 70%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
   padding: 10px;
+  box-sizing: border-box; 
+  justify-content: space-between;
+}
+
+/* キャラクターステータスボックスの横並び配置 */
+.status-boxes {
+  display: flex;
+  justify-content: space-between; /* 各ボックスの間隔を均等に */
+  gap: 10px; /* ボックス間の隙間 */
+  margin-top: 20px; /* 上の余白 */
+}
+
+.status-box {
+  width: 23%; /* ボックスの幅（4つ横並びになるように） */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  text-align: center;
   box-sizing: border-box;
 }
 
+.status-box h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.status-box p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+
 /* 右側: ナビゲーションバーとコンテンツ */
 .right-panel {
-  width: 30%;
-  padding: 10px;
-  border-left: 1px solid #ddd;
-  box-sizing: border-box;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  width: 40%; /* 画面幅の30%に設定 */
+  height: 100%;
+  padding: 10px; /* 余白を追加 */
+  box-sizing: border-box; /* paddingが要素のサイズに影響しないようにする */
 }
 
 .nav-bar {
@@ -38,8 +72,9 @@ html, body {
 
 #content {
   flex: 1;
-  overflow-y: auto; /* コンテンツ部分だけスクロール可能に */
+  overflow-y: auto; /* コンテンツ部分のみスクロール可能 */
 }
+
 
 #characters, #items {
   padding: 0;
@@ -81,3 +116,4 @@ html, body {
 .item-info strong {
   margin-right: 5px; /* アイテム名と個数の間に少し間隔を空ける */
 }
+
