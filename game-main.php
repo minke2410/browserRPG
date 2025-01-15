@@ -125,24 +125,27 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
 
       <!-- 編成情報の表示 -->
       <div id="parties" style="<?= $currentSection === 'parties' ? 'display:block;' : 'display:none;' ?>">
-          <h3>アクティブパーティー一覧</h3>
-          <ul>
-              <?php if (!empty($parties)): ?>
-                  <?php foreach ($parties as $party): ?>
-                      <li class="party-item">
-                          <strong class="party-name"><?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
-                          <span class="party-member">メンバー1: <?= htmlspecialchars($party['member1_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
-                          <span class="party-member">メンバー2: <?= htmlspecialchars($party['member2_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
-                          <span class="party-member">メンバー3: <?= htmlspecialchars($party['member3_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
-                          <span class="party-member">メンバー4: <?= htmlspecialchars($party['member4_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
-                      </li>
-                  <?php endforeach; ?>
-              <?php else: ?>
-                  <li>アクティブなパーティーがありません。</li>
-              <?php endif; ?>
-          </ul>
+        <h3>パーティー一覧</h3>
+        <ul>
+            <?php if (!empty($parties)): ?>
+                <?php foreach ($parties as $party): ?>
+                    <li class="party-item">
+                        <strong class="party-name"><?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
+                        <span class="party-member">メンバー1: <?= htmlspecialchars($party['member1_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                        <span class="party-member">メンバー2: <?= htmlspecialchars($party['member2_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                        <span class="party-member">メンバー3: <?= htmlspecialchars($party['member3_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                        <span class="party-member">メンバー4: <?= htmlspecialchars($party['member4_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                        <button class="toggle-active-btn" data-party-id="<?= $party['id'] ?>" 
+                          data-is-active="<?= isset($party['is_active']) ? $party['is_active'] : 0 ?>"> 
+                          <?= isset($party['is_active']) && $party['is_active'] ? 'アクティブ解除' : 'アクティブにする' ?>
+                        </button>
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li>アクティブなパーティーがありません。</li>
+            <?php endif; ?>
+        </ul>
       </div>
-      
       <!-- アイテム情報の表示 -->
       <div id="items" style="<?= $currentSection === 'items' ? 'display:block;' : 'display:none;' ?>">
         <h3>所持アイテム一覧</h3>
@@ -212,5 +215,33 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
   logEntry.textContent = logMessage;
   logContainer.appendChild(logEntry);
   });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButtons = document.querySelectorAll('.toggle-active-btn');
+
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const partyId = button.getAttribute('data-party-id');
+            const isActive = button.getAttribute('data-is-active') === '1';
+
+            try {
+                const response = await fetch('update_active_party.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ party_id: partyId, is_active: !isActive })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    location.reload(); // 成功したらページをリロード
+                } else {
+                    alert('エラー: ' + result.message);
+                }
+            } catch (error) {
+                alert('通信エラーが発生しました。');
+            }
+        });
+    });
+});
 
 </script>

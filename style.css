@@ -73,7 +73,7 @@ html, body {
 #content {
   flex: 1;
   overflow-y: auto; /* コンテンツ部分のみスクロール可能 */
-  margin-left: 20px;
+  margin: 0 20px;
 }
 
 
@@ -85,6 +85,7 @@ html, body {
 
 #characters li, #items li {
   margin-bottom: 10px;
+  list-style-type: none;
 }
 
 /* hiddenクラスで非表示にする */
@@ -118,3 +119,23 @@ html, body {
   margin-right: 5px; /* アイテム名と個数の間に少し間隔を空ける */
 }
 
+/* パーティー詳細表示 */
+.party-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  list-style-type: none;
+}
+
+.party-name {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+}
+
+.party-member {
+  font-size: 1em;
+  color: #555;
+}
