@@ -21,33 +21,33 @@ if (isset($_GET['section'])) {
 }
 
 try {
-    // データベース接続を取得
-    $db = new Database();
-    $pdo = $db->getConnection();
+  // データベース接続を取得
+  $db = new Database();
+  $pdo = $db->getConnection();
 
-    // Userクラスのインスタンスを作成してユーザー情報を取得
-    $user = new User($pdo, $userId);
-    $userName = htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8');
-    $userGold = number_format($user->gold);
+  // Userクラスのインスタンスを作成してユーザー情報を取得
+  $user = new User($pdo, $userId);
+  $userName = htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8');
+  $userGold = number_format($user->gold);
 
-    // Characterクラスのインスタンスを作成してキャラクター情報を取得
-    $character = new Character($pdo, $userId);
-    $characters = $character->getCharacters();
+  // Characterクラスのインスタンスを作成してキャラクター情報を取得
+  $character = new Character($pdo, $userId);
+  $characters = $character->getCharacters();
 
-    // Itemクラスのインスタンスを作成してアイテム情報を取得
-    $item = new Item($pdo, $userId);
-    $items = $item->getItems();
+  // Itemクラスのインスタンスを作成してアイテム情報を取得
+  $item = new Item($pdo, $userId);
+  $items = $item->getItems();
 
-    // Enemyクラスのインスタンスを作成して敵情報を取得
-    $enemy = new Enemy($pdo);
-    $enemies = $enemy->getEnemies();
+  // Enemyクラスのインスタンスを作成して敵情報を取得
+  $enemy = new Enemy($pdo);
+  $enemies = $enemy->getEnemies();
 
-    // Partyクラスのインスタンスを作成してパーティー情報を取得
-    $party = new Party($pdo, $userId);
-    $parties = $enemy->getParties();
+  // Partyクラスのインスタンスを作成してパーティー情報を取得
+  $party = new Party($pdo, $userId);
+  $parties = $party->getParties();
 
 } catch (Exception $e) {
-    die("エラー: " . $e->getMessage());
+  die("エラー: " . $e->getMessage());
 }
 
 // デフォルトセクションを設定（セッションが空の場合）
@@ -125,24 +125,24 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
 
       <!-- 編成情報の表示 -->
       <div id="parties" style="<?= $currentSection === 'parties' ? 'display:block;' : 'display:none;' ?>">
-        <h3>アクティブパーティー一覧</h3>
-        <ul>
-          <?php if (!empty($parties)): ?>
-            <?php foreach ($parties as $party): ?>
-              <li>
-                <strong><?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
-                <span>メンバー1: <?= htmlspecialchars($party['member1'], ENT_QUOTES, 'UTF-8') ?></span><br>
-                <span>メンバー2: <?= htmlspecialchars($party['member2'], ENT_QUOTES, 'UTF-8') ?></span><br>
-                <span>メンバー3: <?= htmlspecialchars($party['member3'], ENT_QUOTES, 'UTF-8') ?></span><br>
-                <span>メンバー4: <?= htmlspecialchars($party['member4'], ENT_QUOTES, 'UTF-8') ?></span><br>
-              </li>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <li>アクティブなパーティーがありません。</li>
-          <?php endif; ?>
-        </ul>
+          <h3>アクティブパーティー一覧</h3>
+          <ul>
+              <?php if (!empty($parties)): ?>
+                  <?php foreach ($parties as $party): ?>
+                      <li class="party-item">
+                          <strong class="party-name"><?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
+                          <span class="party-member">メンバー1: <?= htmlspecialchars($party['member1_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                          <span class="party-member">メンバー2: <?= htmlspecialchars($party['member2_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                          <span class="party-member">メンバー3: <?= htmlspecialchars($party['member3_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                          <span class="party-member">メンバー4: <?= htmlspecialchars($party['member4_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                      </li>
+                  <?php endforeach; ?>
+              <?php else: ?>
+                  <li>アクティブなパーティーがありません。</li>
+              <?php endif; ?>
+          </ul>
       </div>
-  
+      
       <!-- アイテム情報の表示 -->
       <div id="items" style="<?= $currentSection === 'items' ? 'display:block;' : 'display:none;' ?>">
         <h3>所持アイテム一覧</h3>
