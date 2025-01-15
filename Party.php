@@ -11,6 +11,7 @@ class Party {
     public function getParties() {
         $sql = "
             SELECT 
+                parties.id,
                 parties.party_name,
                 ci1.name AS member1_name,
                 ci2.name AS member2_name,
