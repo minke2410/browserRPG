@@ -81,9 +81,6 @@ function showModal() {
 }
 
 
-
-
-
     
 // パーティーがクリックされたときに選択状態を切り替え
 function selectParty(partyId) {
