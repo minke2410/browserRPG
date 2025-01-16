@@ -57,7 +57,7 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
 
 <head>
   <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="scripts.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 </head>
 
 <div class="content-wrapper">
@@ -170,15 +170,30 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
       </div>
     </div>
   </div>
-  <!-- モーダルウィンドウ -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <span id="modal-close" class="modal-close">&times;</span>
-      <p id="modal-message"></p>
-    </div>
+  <!-- モーダルのHTML構造 -->
+  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="myModalLabel"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+              </div>
+              <div class="modal-body">
+                  出場パーティーが変更されました｡
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+              </div>
+          </div>
+      </div>
   </div>
 </div>
 
+
+<!-- BootstrapのJSおよび依存ライブラリ -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- カスタムスクリプト -->
+<script src="scripts.js" defer></script>
 
 
 <script>

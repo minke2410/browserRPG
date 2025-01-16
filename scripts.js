@@ -30,46 +30,55 @@ function toggleCharacterDetails(characterId) {
   }
 }
 
-// モーダル表示
-function showModal(message) {
-  const modal = document.getElementById('modal');
-  const modalMessage = document.getElementById('modal-message');
-  modalMessage.textContent = message;  // モーダルにメッセージを表示
-  // modal.style.display = 'block';  // モーダルを表示
+// // モーダル表示
+// function showModal(message) {
+//   const modal = document.getElementById('modal');
+//   const modalMessage = document.getElementById('modal-message');
+//   modalMessage.textContent = message;  // モーダルにメッセージを表示
+//   // modal.style.display = 'block';  // モーダルを表示
 
-  // 初回のみイベントリスナーを登録
-  // if (!modal.hasAttribute('data-listeners')) {
-    const closeModal = document.getElementById('modal-close');
-    closeModal.addEventListener('click', () => hideModal(modal));
+//   // 初回のみイベントリスナーを登録
+//   // if (!modal.hasAttribute('data-listeners')) {
+//     const closeModal = document.getElementById('modal-close');
+//     closeModal.addEventListener('click', () => hideModal(modal));
 
-    window.addEventListener('click', function(event) {
-      if (event.target === modal) {
-        hideModal(modal);
-      }
-    });
+//     window.addEventListener('click', function(event) {
+//       if (event.target === modal) {
+//         hideModal(modal);
+//       }
+//     });
 
-    modal.setAttribute('data-listeners', 'true'); // イベントリスナーが登録済みであることを記録
-  // }
+//     modal.setAttribute('data-listeners', 'true'); // イベントリスナーが登録済みであることを記録
+//   // }
+
+//   // モーダルを表示
+//   modal.classList.add('show');
+
+
+
+//   // 一定時間後に自動でモーダルを閉じる (例: 3秒)
+//   setTimeout(() =>  hideModal(modal), 2000);
+// }
+
+// function hideModal(modal) {
+//   modal.classList.remove('show'); // 表示クラスを削除
+
+//   // トランジションが終わるタイミングでdisplay: noneを設定
+//   setTimeout(() => {
+//     modal.style.display = 'none';
+//   }, 3000); // CSSのトランジション時間と同じに設定
+// }
+
+function showModal() {
+  // モーダルの要素を取得
+  const modalElement = document.getElementById('myModal');
+
+  // Bootstrapモーダルのインスタンスを作成
+  const modal = new bootstrap.Modal(modalElement);
 
   // モーダルを表示
-  modal.classList.add('show');
-
-
-
-  // 一定時間後に自動でモーダルを閉じる (例: 3秒)
-  setTimeout(() =>  hideModal(modal), 2000);
+  modal.show();
 }
-
-function hideModal(modal) {
-  modal.classList.remove('show'); // 表示クラスを削除
-
-  // トランジションが終わるタイミングでdisplay: noneを設定
-  setTimeout(() => {
-    modal.style.display = 'none';
-  }, 3000); // CSSのトランジション時間と同じに設定
-}
-
-  
 
 
 
@@ -134,10 +143,8 @@ async function changeParty() {
 
     // レスポンスのJSONをパース
     const result = await parseResponseJson(response);
-    console.log(result.success);
 
     if (result.success) {
-      console.log("abcd123");
       showModal('パーティーがアクティブに設定されました！');
       // location.reload(); // 成功したらページをリロード
     } else {
