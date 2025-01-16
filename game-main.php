@@ -57,6 +57,7 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
 
 <head>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="scripts.js" defer></script>
 </head>
 
 <div class="content-wrapper">
@@ -125,28 +126,28 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
 
       <!-- 編成情報の表示 -->
       <div id="parties" style="<?= $currentSection === 'parties' ? 'display:block;' : 'display:none;' ?>">
-          <h3>パーティー一覧</h3>
-          <ul>
-              <?php if (!empty($parties)): ?>
-                  <?php foreach ($parties as $party): ?>
-                      <li class="party-item" 
-                          id="party-<?= $party['id'] ?>"
-                          class="party-item <?= isset($selectedPartyId) && $selectedPartyId == $party['id'] ? 'selected' : '' ?>"
-                          onclick="selectParty(<?= $party['id'] ?>)">
-                          <strong class="party-name"><?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
-                          <span class="party-member">メンバー1: <?= htmlspecialchars($party['member1_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
-                          <span class="party-member">メンバー2: <?= htmlspecialchars($party['member2_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
-                          <span class="party-member">メンバー3: <?= htmlspecialchars($party['member3_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
-                          <span class="party-member">メンバー4: <?= htmlspecialchars($party['member4_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
-                      </li>
-                  <?php endforeach; ?>
-              <?php else: ?>
-                  <li>アクティブなパーティーがありません。</li>
-              <?php endif; ?>
-          </ul>
-          <button id="change-party-btn" onclick="changeParty()" style="display: <?= isset($selectedPartyId) ? 'inline-block' : 'none' ?>;">
-              パーティーを変更する
-          </button>
+        <h3>パーティー一覧</h3>
+        <ul>
+          <?php if (!empty($parties)): ?>
+            <?php foreach ($parties as $party): ?>
+              <li class="party-item" 
+              id="party-<?= $party['id'] ?>"
+              class="party-item <?= isset($selectedPartyId) && $selectedPartyId == $party['id'] ? 'selected' : '' ?>"
+              onclick="selectParty(<?= $party['id'] ?>)">
+                <strong class="party-name"><?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
+                <span class="party-member">メンバー1: <?= htmlspecialchars($party['member1_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                <span class="party-member">メンバー2: <?= htmlspecialchars($party['member2_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                <span class="party-member">メンバー3: <?= htmlspecialchars($party['member3_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+                <span class="party-member">メンバー4: <?= htmlspecialchars($party['member4_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></span><br>
+              </li>
+            <?php endforeach; ?>
+            <?php else: ?>
+              <li>アクティブなパーティーがありません。</li>
+          <?php endif; ?>
+        </ul>
+        <button id="change-party-btn" onclick="changeParty()" style="display: <?= isset($selectedPartyId) ? 'inline-block' : 'none' ?>;">
+            パーティーを変更する
+        </button>
       </div>
 
       <!-- アイテム情報の表示 -->
@@ -169,82 +170,18 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
       </div>
     </div>
   </div>
+  <!-- モーダルウィンドウ -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modal-close" class="modal-close">&times;</span>
+      <p id="modal-message"></p>
+    </div>
+  </div>
 </div>
 
+
+
 <script>
-  // セクション表示制御
-  function showSection(sectionId) {
-    // セッションに現在のセクションを保存
-    const url = new URL(window.location.href);
-    url.searchParams.set('section', sectionId);
-    window.location.href = url.toString(); // URLを更新してページをリロード
-  }
-
-  // キャラクターの詳細情報をトグル（表示/非表示）する関数
-  function toggleCharacterDetails(characterId) {
-    // すべてのキャラクター詳細を取得
-    const allDetails = document.querySelectorAll('.character-details');
-    
-    // 他のキャラクターの詳細情報を非表示にする
-    allDetails.forEach(detail => {
-      // 他のキャラクターの詳細が表示されていれば非表示にする
-      if (detail.id !== 'details-' + characterId) {
-        detail.style.display = 'none';
-      }
-    });
-
-    // クリックされたキャラクターの詳細をトグル
-    const detailsDiv = document.getElementById('details-' + characterId);
-    
-    // 詳細情報の表示状態を切り替え
-    if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-      detailsDiv.style.display = 'block';
-    } else {
-      detailsDiv.style.display = 'none';
-    }
-  }
-
-  document.getElementById('command-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const character = document.getElementById('character').value;
-  const action = document.getElementById('action').value;
-
-  // 仮のログメッセージを生成（本来はサーバーから結果を受け取る）
-  const logMessage = `${character}が${action}を選択しました！`;
-  
-  const logContainer = document.getElementById('log-messages');
-  const logEntry = document.createElement('div');
-  logEntry.textContent = logMessage;
-  logContainer.appendChild(logEntry);
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggleButtons = document.querySelectorAll('.toggle-active-btn');
-
-    toggleButtons.forEach(button => {
-        button.addEventListener('click', async () => {
-            const partyId = button.getAttribute('data-party-id');
-            const isActive = button.getAttribute('data-is-active') === '1';
-
-            try {
-                const response = await fetch('update_active_party.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ party_id: partyId, is_active: !isActive })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    location.reload(); // 成功したらページをリロード
-                } else {
-                    alert('エラー: ' + result.message);
-                }
-            } catch (error) {
-                alert('通信エラーが発生しました。');
-            }
-        });
-    });
-});
-
+// 選択されたパーティーIDを保存する
+let selectedPartyId = <?= isset($selectedPartyId) ? $selectedPartyId : 'null' ?>;
 </script>
