@@ -120,29 +120,70 @@ html, body {
 }
 
 /* パーティー詳細表示 */
-.party-item {
-  margin-bottom: 15px;
-  padding: 10px;
+/* パーティーリスト全体のスタイル */
+.party-list {
+  display: flex;
+  flex-direction: column; /* パーティーを縦に並べる */
+  gap: 15px; /* パーティーボックスの間隔 */
+}
+
+/* パーティーボックスのスタイル */
+.party-box {
+  display: flex;
+  flex-direction: column; /* ヘッダーとメンバーを縦に配置 */
+  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #f9f9f9;
-  list-style-type: none;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  width: 100%; /* 横長にする */
+  max-width: 600px; /* ボックスの最大幅を制限 */
+  margin: 0 auto; /* 中央揃え */
 }
 
-.party-name {
-  font-size: 1.2em;
+/* パーティーボックスのホバー時の効果 */
+.party-box:hover {
+  background-color: #f1f8ff;
+  border-color: #007bff;
+}
+
+/* パーティー名のスタイル */
+.party-header {
   font-weight: bold;
-  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
+/* キャラクター名を横並びにする */
+.party-members {
+  display: flex;
+  justify-content: space-around; /* 均等に配置 */
+  align-items: center;
+  gap: 10px;
+}
+
+/* キャラクター名のスタイル */
 .party-member {
-  font-size: 1em;
-  color: #555;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background-color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  flex: 1; /* 各メンバーが均等な幅を持つ */
 }
 
 .party-item.selected {
-  border: 2px solid #4CAF50; /* 緑色で枠を囲む */
-  padding: 10px;
-  background-color: #f1f1f1;
+  border: 3px solid #4CAF50; /* 緑色で枠を囲む */
+  background-color: #e6ffe6; /* 選択時の背景色 */
+  transition: background-color 0.3s, border-color 0.3s; /* アニメーション */
 }
+
+#change-party-btn {
+  margin-top: 10px;
+}
+
+
+
 

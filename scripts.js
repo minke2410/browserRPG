@@ -89,14 +89,16 @@ function selectParty(partyId) {
     if (previousSelectedParty) {
         previousSelectedParty.classList.remove('selected');
     }
-    
-    // 選択されたパーティーを枠で囲む
+
+    // クリックされたパーティーを枠で囲む
     const partyItem = document.getElementById('party-' + partyId);
-    partyItem.classList.add('selected');
-    
+    if (partyItem) {
+        partyItem.classList.add('selected');
+    }
+
     // 変更ボタンを表示
     document.getElementById('change-party-btn').style.display = 'inline-block';
-    
+
     // 選択されたパーティーIDを保存
     window.selectedPartyId = partyId;
 }
