@@ -125,7 +125,9 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
           <h3>パーティー一覧</h3>
           <div class="party-list">
               <?php foreach ($parties as $party): ?>
-                  <div id="party-<?= $party['id'] ?>" class="party-box party-item <?= isset($selectedPartyId) && $selectedPartyId == $party['id'] ? 'selected' : '' ?>">
+                  <div id="party-<?= $party['id'] ?>"
+                       class="party-box party-item <?= isset($selectedPartyId) && $selectedPartyId == $party['id'] ? 'selected' : '' ?>"
+                       onclick="selectParty(<?= $party['id'] ?>)">
                       <div class="party-header">
                           <?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?>
                       </div>
