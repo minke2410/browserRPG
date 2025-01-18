@@ -100,73 +100,62 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
   
     <!-- コンテンツ -->
     <div id="content">
-      <!-- キャラクター情報の表示 -->
-      <div id="characters" style="<?= $currentSection === 'characters' ? 'display:block;' : 'display:none;' ?>">
-        <h3>所持キャラクター一覧</h3>
-        <ul>
-          <?php if (!empty($characters)): ?>
-            <?php foreach ($characters as $character): ?>
-              <li>
-                <strong class="character-name" onclick="toggleCharacterDetails(<?= intval($character['id']) ?>)">
-                  <?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?>
-                </strong>
-                <div id="details-<?= $character['id'] ?>" class="character-details hidden" style="padding-left: 20px;">
-                  <strong>レベル:</strong> <?= htmlspecialchars($character['level'], ENT_QUOTES, 'UTF-8') ?><br>
-                  <strong>HP:</strong> <?= htmlspecialchars($character['hp'], ENT_QUOTES, 'UTF-8') ?><br>
-                  <strong>攻撃力:</strong> <?= htmlspecialchars($character['attack'], ENT_QUOTES, 'UTF-8') ?><br>
-                  <strong>経験値:</strong> <?= htmlspecialchars($character['xp'], ENT_QUOTES, 'UTF-8') ?><br>
-                </div>
-              </li>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <li>キャラクターがいません。</li>
-          <?php endif; ?>
-        </ul>
+      <!-- キャラクター情報 -->
+      <div id="characters" class="<?= $currentSection === 'characters' ? '' : 'hidden' ?>">
+          <h3>所持キャラクター一覧</h3>
+          <ul>
+              <?php foreach ($characters as $character): ?>
+                  <li>
+                      <strong class="character-name" onclick="toggleCharacterDetails(<?= intval($character['id']) ?>)">
+                          <?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?>
+                      </strong>
+                      <div id="details-<?= $character['id'] ?>" class="character-details hidden">
+                          <strong>レベル:</strong> <?= htmlspecialchars($character['level'], ENT_QUOTES, 'UTF-8') ?><br>
+                          <strong>HP:</strong> <?= htmlspecialchars($character['hp'], ENT_QUOTES, 'UTF-8') ?><br>
+                          <strong>攻撃力:</strong> <?= htmlspecialchars($character['attack'], ENT_QUOTES, 'UTF-8') ?><br>
+                          <strong>経験値:</strong> <?= htmlspecialchars($character['xp'], ENT_QUOTES, 'UTF-8') ?><br>
+                      </div>
+                  </li>
+              <?php endforeach; ?>
+          </ul>
       </div>
 
-      <!-- 編成情報の表示 -->
-      <div id="parties" style="<?= $currentSection === 'parties' ? 'display:block;' : 'display:none;' ?>">
-        <h3>パーティー一覧</h3>
-        <div class="party-list">
-            <?php foreach ($parties as $party): ?>
-                <div 
-                    id="party-<?= $party['id'] ?>" 
-                    class="party-box party-item <?= isset($selectedPartyId) && $selectedPartyId == $party['id'] ? 'selected' : '' ?>" 
-                    onclick="selectParty(<?= $party['id'] ?>)"
-                >
-                    <div class="party-header">
-                        <?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?>
-                    </div>
-                    <div class="party-members">
-                        <div class="party-member"><?= htmlspecialchars($party['member1_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
-                        <div class="party-member"><?= htmlspecialchars($party['member2_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
-                        <div class="party-member"><?= htmlspecialchars($party['member3_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
-                        <div class="party-member"><?= htmlspecialchars($party['member4_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <button id="change-party-btn" onclick="changeParty()" style="display: none;">
+      <!-- パーティー情報 -->
+      <div id="parties" class="<?= $currentSection === 'parties' ? '' : 'hidden' ?>">
+          <h3>パーティー一覧</h3>
+          <div class="party-list">
+              <?php foreach ($parties as $party): ?>
+                  <div id="party-<?= $party['id'] ?>" class="party-box party-item <?= isset($selectedPartyId) && $selectedPartyId == $party['id'] ? 'selected' : '' ?>">
+                      <div class="party-header">
+                          <?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?>
+                      </div>
+                      <div class="party-members">
+                          <div class="party-member"><?= htmlspecialchars($party['member1_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
+                          <div class="party-member"><?= htmlspecialchars($party['member2_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
+                          <div class="party-member"><?= htmlspecialchars($party['member3_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
+                          <div class="party-member"><?= htmlspecialchars($party['member4_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
+                      </div>
+                  </div>
+              <?php endforeach; ?>
+          </div>
+          <button id="change-party-btn" onclick="changeParty()" style="display: none;">
             このパーティーで出場する
-        </button>
+          </button>
+      </div>
 
-      <!-- アイテム情報の表示 -->
-      <div id="items" style="<?= $currentSection === 'items' ? 'display:block;' : 'display:none;' ?>">
-        <h3>所持アイテム一覧</h3>
-        <ul>
-          <?php if (!empty($items)): ?>
-            <?php foreach ($items as $item): ?>
-              <li>
-                <div class="item-info">
-                  <strong><?= htmlspecialchars($item['item_name'], ENT_QUOTES, 'UTF-8') ?></strong><br>
-                  <span><?= htmlspecialchars($item['quantity'], ENT_QUOTES, 'UTF-8') ?>個</span>
-                </div>
-              </li>
-            <?php endforeach; ?>
-          <?php else: ?>
-            <li>アイテムがありません。</li>
-          <?php endif; ?>
-        </ul>
+      <!-- アイテム情報 -->
+      <div id="items" class="<?= $currentSection === 'items' ? '' : 'hidden' ?>">
+          <h3>アイテム一覧</h3>
+          <ul class="item-list">
+              <?php foreach ($items as $item): ?>
+                  <li>
+                      <div class="item-info">
+                          <strong><?= htmlspecialchars($item['item_name'], ENT_QUOTES, 'UTF-8') ?></strong>
+                          <span>x<?= htmlspecialchars($item['quantity'], ENT_QUOTES, 'UTF-8') ?></span>
+                      </div>
+                  </li>
+              <?php endforeach; ?>
+          </ul>
       </div>
     </div>
   </div>

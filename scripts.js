@@ -1,10 +1,41 @@
 // セクション表示制御
 function showSection(sectionId) {
-  // セッションに現在のセクションを保存
+  // すべてのセクションを非表示にする
+  document.querySelectorAll('#content > div').forEach(section => {
+      section.classList.add('hidden');
+  });
+
+  // 指定されたセクションを表示
+  const activeSection = document.getElementById(sectionId);
+  if (activeSection) {
+      activeSection.classList.remove('hidden');
+  }
+
+  // すべてのボタンから「active」クラスを削除
+  document.querySelectorAll('.nav-bar button').forEach(button => {
+      button.classList.remove('active');
+  });
+
+  // 対応するボタンに「active」クラスを追加
+  const activeButton = document.querySelector(`.nav-bar button[onclick="showSection('${sectionId}')"]`);
+  if (activeButton) {
+      activeButton.classList.add('active');
+  }
+
+  // URLのセクションパラメータを更新
   const url = new URL(window.location.href);
   url.searchParams.set('section', sectionId);
-  window.location.href = url.toString(); // URLを更新してページをリロード
+  history.pushState({}, '', url);
 }
+
+// ページ読み込み時に初期化処理を実行
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const section = urlParams.get('section') || 'characters';
+  showSection(section);
+});
+
+
 
 // キャラクターの詳細情報をトグル（表示/非表示）する関数
 function toggleCharacterDetails(characterId) {
@@ -94,13 +125,13 @@ function selectParty(partyId) {
     const partyItem = document.getElementById('party-' + partyId);
     if (partyItem) {
         partyItem.classList.add('selected');
-    }
-
-    // 変更ボタンを表示
-    document.getElementById('change-party-btn').style.display = 'inline-block';
-
-    // 選択されたパーティーIDを保存
-    window.selectedPartyId = partyId;
+        // 選択されたパーティーIDを保存
+        window.selectedPartyId = partyId;
+        // 変更ボタンを表示
+        document.getElementById('change-party-btn').style.display = 'inline-block';
+    } else {
+      console.error(`Party with ID ${partyId} not found.`);
+    } 
 }
 
 

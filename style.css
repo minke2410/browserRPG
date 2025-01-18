@@ -88,10 +88,18 @@ html, body {
   list-style-type: none;
 }
 
-/* hiddenクラスで非表示にする */
+/* 非表示のセクション */
 .hidden {
   display: none;
 }
+
+/* アクティブなナビゲーションボタン */
+.nav-bar button.active {
+  font-weight: bold;
+  border-bottom: 2px solid red;
+  background-color: #ffe6e6;
+}
+
 
 /* クリック可能に見せるスタイル（ボタン風） */
 .character-name {
@@ -109,14 +117,31 @@ html, body {
 }
 
 /* アイテム名と個数を横並びにするスタイル */
-.item-info {
+/* アイテムリスト */
+.item-list {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+
+.item-list li {
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
   display: flex;
-  gap: 10px; /* アイテム名と個数の間隔を調整 */
-  align-items: center; /* アイテム名と個数を縦方向にセンタリング */
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
 }
 
 .item-info strong {
-  margin-right: 5px; /* アイテム名と個数の間に少し間隔を空ける */
+  font-weight: bold;
+  color: #333;
+}
+
+.item-info span {
+  color: #666;
 }
 
 /* パーティー詳細表示 */
