@@ -27,8 +27,6 @@ try {
 
   // Userクラスのインスタンスを作成してユーザー情報を取得
   $user = new User($pdo, $userId);
-  $userName = htmlspecialchars($user->username, ENT_QUOTES, 'UTF-8');
-  $userGold = number_format($user->gold);
 
   // Characterクラスのインスタンスを作成してキャラクター情報を取得
   $character = new Character($pdo, $userId);
@@ -64,14 +62,18 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
   <!-- 左側: ユーザー情報･戦闘画面 -->
   <div class="left-panel">
     <!-- 上部:ユーザー情報 -->
-    <div style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; display: flex; justify-content: space-between; align-items: center;">
-      <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-        <div style="font-weight: bold;">ユーザー名：</div>
-        <div><?= htmlspecialchars($userName, ENT_QUOTES, 'UTF-8') ?></div>
-      </div>
-      <div style="display: flex; align-items: center; gap: 10px; flex: 0.8;">
-        <div style="font-weight: bold;">所持金：</div>
-        <div><?= $userGold ?></div>
+    <div class="user-info" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; display: flex; justify-content: space-between; align-items: center;">
+      <div style="flex: 1; text-align: center; font-weight: bold;">ユーザー名 <?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></div>
+      <div style="flex: 1; text-align: center; font-weight: bold;">所持金 <?= number_format($user->getGold()) ?></div>
+      <div style="flex: 1; text-align: center; font-weight: bold;">レベル <?= $user->getLevel() ?></div>
+      <div style="flex: 2; display: flex; align-items: center; gap: 10px;">
+        <span style="font-weight: bold; white-space: nowrap;">経験値</span>
+        <div class="progress-bar-container" style="flex-grow: 1;">
+          <div class="progress-bar" style="width: <?= min(100, ($user->getXp() % 100)) ?>%;" style="width: <?= ($user->getXp() % 100) ?>%;"></div>
+          <div class="progress-bar-text">
+            <?= $user->getXp() ?>
+          </div>
+        </div>
       </div>
     </div>
 

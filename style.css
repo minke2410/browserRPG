@@ -11,7 +11,7 @@ html, body {
   position: relative; /* 子要素の絶対配置を基準に */
 }
 
-/* 左側: ユーザー情報 */
+/* 左側 */
 .left-panel {
   display: flex;
   flex-direction: column;
@@ -21,6 +21,46 @@ html, body {
   box-sizing: border-box; 
   justify-content: space-between;
 }
+
+/* ユーザー情報 */
+.user-info {
+  display: flex;
+  justify-content: space-between; /* 各要素を均等に配置 */
+  align-items: center; /* 縦方向の中央揃え */
+  gap: 20px; /* 要素間のスペース */
+}
+
+.user-info > div {
+  flex: 1; /* 各要素を均等に拡大 */
+  text-align: center; /* テキストを中央揃え */
+}
+
+
+.progress-bar-container {
+  width: 100%; /* バーの幅を親要素に合わせる */
+  background-color: #e0e0e0; /* 背景色を薄い色に設定 */
+  border-radius: 5px; /* バーの角を丸める */
+  position: relative;
+  height: 20px; /* 高さを設定 */
+}
+
+.progress-bar {
+  height: 100%; /* 親要素の高さを継承 */
+  background-color: #4caf50 !important; /* プログレスバーの色 */
+  border-radius: 5px; /* バーの角を丸める */
+  transition: width 0.3s ease; /* 幅の変更をスムーズに */
+}
+
+.progress-bar-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 中央揃え */
+  color: rgb(24, 20, 20); /* テキストの色 */
+  font-weight: bold; /* 太字 */
+  font-size: 12px; /* フォントサイズ */
+}
+
 
 /* キャラクターステータスボックスの横並び配置 */
 .status-boxes {

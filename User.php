@@ -1,35 +1,54 @@
 <?php
 class User {
     private $pdo;
-    private $userId;
+    private $id;
     public $username;
     public $gold;
+    public $level;
+    public $xp;
 
-    public function __construct($pdo, $userId) {
+    public function __construct($pdo, $id) {
         $this->pdo = $pdo;
-        $this->userId = $userId;  // コンストラクタ内で$userIdを直接設定
-        $this->loadUserData();
+        $this->id = $id;
+        $this->loadUser();
     }
 
-    private function loadUserData() {
-        // userIdを使ってユーザー情報を取得
-        $sql = "SELECT id, username, gold FROM users WHERE id = :user_id";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['user_id' => $this->userId]);  // userIdを使って検索
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    private function loadUser() {
+        if (empty($this->id)) {
+            throw new Exception("ユーザーIDが設定されていません");
+        }
 
-        if ($result) {
-            $this->userId = $result['id'];  // userIdをセット
-            $this->username = $result['username']; // ユーザー名をセット
-            $this->gold = $result['gold']; // 所持金をセット
+        $stmt = $this->pdo->prepare("SELECT username, gold, level, xp FROM users WHERE id = :id");
+        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+
+        if (!$stmt->execute()) {
+            throw new Exception("クエリの実行に失敗しました: " . implode(", ", $stmt->errorInfo()));
+        }
+
+        if ($stmt->rowCount() === 1) {
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->username = $user['username'];
+            $this->gold = $user['gold'];
+            $this->level = $user['level'];
+            $this->xp = $user['xp'];
         } else {
-            throw new Exception("User not found");
+            throw new Exception("ユーザーが見つかりません");
         }
     }
 
-    public function getUserId() {
-        return $this->userId;
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function getGold() {
+        return $this->gold;
+    }
+
+    public function getLevel() {
+        return $this->level;
+    }
+
+    public function getXp() {
+        return $this->xp;
     }
 }
-
-?>
