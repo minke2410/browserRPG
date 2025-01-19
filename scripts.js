@@ -186,3 +186,19 @@ async function changeParty() {
   }
 }
 
+function showDungeonDetails(dungeonId) {
+  fetch(`get_dungeon_details.php?id=${dungeonId}`)
+      .then(response => response.json())
+      .then(data => {
+          const detailsContainer = document.getElementById('dungeon-details');
+          detailsContainer.innerHTML = `
+              <h4>${data.name}</h4>
+              <p>必要レベル: ${data.required_level}</p>
+              <p>フロア数: ${data.floor}</p>
+              <p>最大敵数: ${data.max_enemies}</p>
+              <button onclick="challengeDungeon(${data.id})">挑戦する</button>
+          `;
+          detailsContainer.style.display = 'block';
+      })
+      .catch(error => console.error('Error:', error));
+}

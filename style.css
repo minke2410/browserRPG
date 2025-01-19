@@ -18,9 +18,11 @@ html, body {
   flex: 1;
   height: 100%;
   padding: 10px;
-  box-sizing: border-box; 
-  justify-content: space-between;
+  box-sizing: border-box;
+  justify-content: flex-start; /* 要素を上寄せに配置 */
+  gap: 10px; /* 間隔を10pxに設定 */
 }
+
 
 /* ユーザー情報 */
 .user-info {

@@ -5,8 +5,9 @@ require_once 'db.php';         // Databaseクラスを読み込み
 require_once 'User.php';       // Userクラスを読み込み
 require_once 'Character.php';  // Characterクラスを読み込み
 require_once 'Item.php';       // Itemクラスを読み込み
-require_once 'Enemy.php';       // Enemyクラスを読み込み
-require_once 'Party.php';       // Partyクラスを読み込み
+require_once 'Enemy.php';      // Enemyクラスを読み込み
+require_once 'Party.php';      // Partyクラスを読み込み
+require_once 'Dungeon.php';    // Dungeonクラスを読み込み
 
 // セッションにユーザーIDが設定されていない場合、エラーメッセージを表示
 if (!isset($_SESSION['user_id'])) {
@@ -44,6 +45,12 @@ try {
   $party = new Party($pdo, $userId);
   $parties = $party->getParties();
 
+  // Dungeonクラスのインスタンスを作成
+  $dungeon = new Dungeon($pdo);
+
+  // アクティブなダンジョンを取得
+  $activeDungeons = $dungeon->getActiveDungeonsByUser($userId);
+
 } catch (Exception $e) {
   die("エラー: " . $e->getMessage());
 }
@@ -77,16 +84,21 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
       </div>
     </div>
 
-    <!-- 下部:キャラクターステータスボックス -->
-    <div class="status-boxes">
-      <?php foreach ($characters as $character): ?>
-        <div class="status-box">
-          <h4><?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?></h4>
-          <p>レベル: <?= htmlspecialchars($character['level'], ENT_QUOTES, 'UTF-8') ?></p>
-          <p>HP: <?= htmlspecialchars($character['hp'], ENT_QUOTES, 'UTF-8') ?></p>
-          <p>攻撃力: <?= htmlspecialchars($character['attack'], ENT_QUOTES, 'UTF-8') ?></p>
-        </div>
-      <?php endforeach; ?>
+    <!-- 下部:ダンジョン情報 -->
+    <div class="dungeons-container">
+    <h3>ダンジョン一覧</h3>
+      <ul>
+        <?php foreach ($activeDungeons as $dungeon): ?>
+          <li>
+            <a href="#" onclick="showDungeonDetails(<?= $dungeon['id'] ?>)">
+              <?= htmlspecialchars($dungeon['name'], ENT_QUOTES, 'UTF-8') ?>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+      <div id="dungeon-details" style="display: none;">
+        <!-- ダンジョン詳細情報をここに表示 -->
+      </div>
     </div>
   </div>
 
