@@ -186,19 +186,34 @@ async function changeParty() {
   }
 }
 
-function showDungeonDetails(dungeonId) {
-  fetch(`get_dungeon_details.php?id=${dungeonId}`)
-      .then(response => response.json())
-      .then(data => {
-          const detailsContainer = document.getElementById('dungeon-details');
-          detailsContainer.innerHTML = `
-              <h4>${data.name}</h4>
-              <p>必要レベル: ${data.required_level}</p>
-              <p>フロア数: ${data.floor}</p>
-              <p>最大敵数: ${data.max_enemies}</p>
-              <button onclick="challengeDungeon(${data.id})">挑戦する</button>
-          `;
-          detailsContainer.style.display = 'block';
-      })
-      .catch(error => console.error('Error:', error));
+
+let selectedDungeonId = null;
+
+function selectDungeon(dungeonId) {
+    // 既存の選択状態を解除
+    document.querySelectorAll('.dungeon-box').forEach(box => box.classList.remove('selected'));
+
+    // 新たに選択状態を設定
+    const selectedDungeon = document.getElementById(`dungeon-${dungeonId}`);
+    if (selectedDungeon) {
+        selectedDungeon.classList.add('selected');
+        selectedDungeonId = dungeonId;
+
+        // 挑戦ボタンを表示
+        document.getElementById('challenge-dungeon-btn').style.display = 'block';
+    }
+}
+
+function startChallenge() {
+    if (selectedDungeonId) {
+        window.location.href = `battle-main.php?dungeon_id=${selectedDungeonId}`;
+    } else {
+        alert('ダンジョンを選択してください。');
+    }
+}
+
+
+function challengeDungeon(dungeonId) {
+  // ダンジョンIDをURLに含めてリダイレクト
+  window.location.href = `battle-main.php?dungeon_id=${dungeonId}`;
 }

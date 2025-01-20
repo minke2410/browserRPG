@@ -65,7 +65,7 @@ CREATE TABLE `dungeon_enemies` (
   KEY `enemy_id` (`enemy_id`),
   CONSTRAINT `dungeon_enemies_ibfk_1` FOREIGN KEY (`dungeon_id`) REFERENCES `dungeons` (`id`) ON DELETE CASCADE,
   CONSTRAINT `dungeon_enemies_ibfk_2` FOREIGN KEY (`enemy_id`) REFERENCES `enemies` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `dungeon_enemies` (`id`, `dungeon_id`, `enemy_id`, `created_at`, `updated_at`) VALUES
 (1,	1,	1,	'2025-01-19 21:42:05',	'2025-01-19 21:42:05'),
@@ -86,7 +86,7 @@ CREATE TABLE `dungeons` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `dungeons` (`id`, `name`, `required_level`, `floor`, `max_enemies`, `reward_xp`, `created_at`, `updated_at`) VALUES
 (1,	'森の迷宮',	1,	5,	3,	100,	'2025-01-19 21:14:29',	'2025-01-19 21:38:39'),
@@ -120,7 +120,7 @@ CREATE TABLE `inventory` (
   KEY `item_id` (`item_id`),
   CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 DROP TABLE IF EXISTS `items`;
@@ -194,7 +194,7 @@ CREATE TABLE `progress_dungeons` (
   KEY `dungeon_id` (`dungeon_id`),
   CONSTRAINT `progress_dungeons_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `progress_dungeons_ibfk_2` FOREIGN KEY (`dungeon_id`) REFERENCES `dungeons` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `progress_dungeons` (`id`, `user_id`, `dungeon_id`, `is_completed`, `is_active`, `current_floor`, `created_at`, `updated_at`) VALUES
 (1,	3,	1,	0,	1,	1,	'2025-01-19 21:59:58',	'2025-01-19 21:59:58'),

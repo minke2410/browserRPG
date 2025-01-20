@@ -64,34 +64,71 @@ html, body {
 }
 
 
-/* キャラクターステータスボックスの横並び配置 */
-.status-boxes {
+/* ダンジョンリスト全体のスタイル */
+.dungeon-list {
   display: flex;
-  justify-content: space-between; /* 各ボックスの間隔を均等に */
-  gap: 10px; /* ボックス間の隙間 */
-  margin-top: 20px; /* 上の余白 */
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
 }
 
-.status-box {
-  width: 23%; /* ボックスの幅（4つ横並びになるように） */
-  padding: 10px;
+/* ダンジョンボックスのスタイル */
+.dungeon-box {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #f9f9f9;
-  text-align: center;
-  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
-.status-box h4 {
-  margin: 0 0 10px 0;
-  font-size: 1.1rem;
+.dungeon-box:hover {
+  background-color: #f1f8ff;
+  border-color: #007bff;
+}
+
+.dungeon-list .dungeon-box.selected {
+  border: 3px solid #4CAF50; /* 緑色で枠を囲む */
+  background-color: #e6ffe6;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.dungeon-header {
   font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
-.status-box p {
-  margin: 5px 0;
-  font-size: 0.9rem;
+.dungeon-info {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
 }
+
+.dungeon-info span {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* 挑戦ボタンのスタイル */
+#challenge-dungeon-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+}
+
+#challenge-dungeon-btn:hover {
+  background-color: #0056b3;
+}
+
 
 
 /* 右側: ナビゲーションバーとコンテンツ */
@@ -249,6 +286,36 @@ html, body {
 
 #change-party-btn {
   margin-top: 10px;
+}
+
+
+/* キャラクターステータスボックスの横並び配置 */
+.status-boxes {
+  display: flex;
+  justify-content: space-between; /* 各ボックスの間隔を均等に */
+  gap: 10px; /* ボックス間の隙間 */
+  margin-top: 20px; /* 上の余白 */
+}
+
+.status-box {
+  width: 23%; /* ボックスの幅（4つ横並びになるように） */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.status-box h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.status-box p {
+  margin: 5px 0;
+  font-size: 0.9rem;
 }
 
 

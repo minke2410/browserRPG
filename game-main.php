@@ -47,9 +47,9 @@ try {
 
   // Dungeonクラスのインスタンスを作成
   $dungeon = new Dungeon($pdo);
-
   // アクティブなダンジョンを取得
   $activeDungeons = $dungeon->getActiveDungeonsByUser($userId);
+
 
 } catch (Exception $e) {
   die("エラー: " . $e->getMessage());
@@ -86,18 +86,22 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
 
     <!-- 下部:ダンジョン情報 -->
     <div class="dungeons-container">
-    <h3>ダンジョン一覧</h3>
-      <ul>
-        <?php foreach ($activeDungeons as $dungeon): ?>
-          <li>
-            <a href="#" onclick="showDungeonDetails(<?= $dungeon['id'] ?>)">
-              <?= htmlspecialchars($dungeon['name'], ENT_QUOTES, 'UTF-8') ?>
-            </a>
-          </li>
+      <div class="dungeon-list">
+        <h3>ダンジョン一覧</h3>
+        <?php foreach ($activeDungeons as $d): ?>
+            <div id="dungeon-<?= $d['id'] ?>" class="dungeon-box" onclick="selectDungeon(<?= $d['id'] ?>)">
+                <div class="dungeon-header">
+                  <?= htmlspecialchars($d['name'], ENT_QUOTES, 'UTF-8') ?>
+                </div>
+                <div class="dungeon-info">
+                    <span>必要レベル: <?= $d['required_level'] ?></span>
+                    <span>フロア数: <?= $d['floor'] ?></span>
+                </div>
+            </div>
         <?php endforeach; ?>
-      </ul>
-      <div id="dungeon-details" style="display: none;">
-        <!-- ダンジョン詳細情報をここに表示 -->
+        <button id="challenge-dungeon-btn" style="display:none;" onclick="startChallenge()">
+          挑戦する
+        </button>
       </div>
     </div>
   </div>
