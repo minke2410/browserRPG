@@ -6,6 +6,16 @@ class Dungeon {
         $this->pdo = $pdo;
     }
 
+    // ダンジョンIDで特定のダンジョン情報を取得する
+    public function getDungeonById($dungeonId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM dungeons WHERE id = :dungeonId");
+        $stmt->bindParam(':dungeonId', $dungeonId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // 結果を返す
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // ユーザーごとにアクティブなダンジョンを取得
     public function getActiveDungeonsByUser($userId) {
         $stmt = $this->pdo->prepare("

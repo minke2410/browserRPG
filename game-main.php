@@ -63,6 +63,8 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
 <head>
   <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <!-- カスタムスクリプト -->
+  <script src="scripts.js" defer></script>
 </head>
 
 <div class="content-wrapper">
@@ -99,9 +101,7 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
                 </div>
             </div>
         <?php endforeach; ?>
-        <button id="challenge-dungeon-btn" style="display:none;" onclick="startChallenge()">
-          挑戦する
-        </button>
+        <button id="challenge-dungeon-btn" style="display: none;" onclick="startChallenge()">挑戦する</button>
       </div>
     </div>
   </div>
@@ -140,7 +140,11 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
 
       <!-- パーティー情報 -->
       <div id="parties" class="<?= $currentSection === 'parties' ? '' : 'hidden' ?>">
-          <h3>パーティー一覧</h3>
+          <div class="party-head">
+            <h3>パーティー一覧</h3>
+            <!-- 新規登録ボタン -->
+            <button id="add-party-btn" class="btn btn-primary" onclick="showPartyRegistrationForm()">新規登録</button>
+          </div>
           <div class="party-list">
               <?php foreach ($parties as $party): ?>
                   <div id="party-<?= $party['id'] ?>"
@@ -160,6 +164,9 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
           </div>
           <button id="change-party-btn" onclick="changeParty()" style="display: none;">
             このパーティーで出場する
+          </button>
+          <button id="delete-party-btn" onclick="deleteParty()" style="display: none;">
+            このパーティーを削除する
           </button>
       </div>
 
@@ -188,7 +195,7 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
               </div>
               <div class="modal-body">
-                  出場パーティーが変更されました｡
+                <p id="modal-message">ここに動的メッセージを表示します。</p>
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
@@ -196,13 +203,43 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
           </div>
       </div>
   </div>
+
+  <!-- 新規パーティー登録フォーム -->
+  <div id="party-registration-form-container" class="hidden-form">
+  <div class="form-wrapper">
+    <h3>新しいパーティーを登録</h3>
+    <form id="party-registration-form">
+      <div class="form-group">
+        <label for="party-name">パーティー名</label>
+        <input type="text" id="party-name" name="party_name" class="form-control" required>
+      </div>
+      <?php
+      for ($i = 1; $i <= 4; $i++): ?>
+        <div class="form-group">
+          <label for="member<?= $i ?>">メンバー<?= $i ?></label>
+          <select id="member<?= $i ?>" name="member<?= $i ?>" class="form-select">
+            <option value="">選択してください</option>
+            <?php foreach ($characters as $character): ?>
+              <option value="<?= $character['id'] ?>"><?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+      <?php endfor; ?>
+      <!-- メンバー2～4も同様に追加 -->
+      <div class="form-group">
+        <button type="button" class="btn btn-primary" onclick="submitPartyRegistration()">登録</button>
+        <button type="button" class="btn btn-secondary" onclick="hidePartyRegistrationForm()">キャンセル</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 </div>
 
 
 <!-- BootstrapのJSおよび依存ライブラリ -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<!-- カスタムスクリプト -->
-<script src="scripts.js" defer></script>
+
 
 
 <script>

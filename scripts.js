@@ -100,16 +100,24 @@ function toggleCharacterDetails(characterId) {
 //   }, 3000); // CSSのトランジション時間と同じに設定
 // }
 
-function showModal() {
-  // モーダルの要素を取得
+/**
+ * モーダルにメッセージを表示
+ * @param {string} message 表示するメッセージ
+ */
+function showModalWithMessage(message) {
+  // メッセージ要素を取得
+  const modalMessageElement = document.getElementById('modal-message');
+  
+  if (modalMessageElement) {
+      modalMessageElement.textContent = message; // メッセージを設定
+  }
+
+  // Bootstrapモーダルのインスタンスを作成して表示
   const modalElement = document.getElementById('myModal');
-
-  // Bootstrapモーダルのインスタンスを作成
   const modal = new bootstrap.Modal(modalElement);
-
-  // モーダルを表示
   modal.show();
 }
+
 
 
     
@@ -129,6 +137,7 @@ function selectParty(partyId) {
         window.selectedPartyId = partyId;
         // 変更ボタンを表示
         document.getElementById('change-party-btn').style.display = 'inline-block';
+        document.getElementById('delete-party-btn').style.display = 'inline-block';
     } else {
       console.error(`Party with ID ${partyId} not found.`);
     } 
@@ -175,13 +184,45 @@ async function changeParty() {
     const result = await parseResponseJson(response);
 
     if (result.success) {
-      showModal('パーティーがアクティブに設定されました！');
+      showModalWithMessage('出場パーティを変更しました！');
       // location.reload(); // 成功したらページをリロード
     } else {
       alert('エラー: ' + result.message);
     }
   } catch (error) {
     console.log('エラーが発生しました:', error);
+    alert('通信エラーが発生しました。');
+  }
+}
+
+// 選択したパーティーを削除する
+async function deleteParty() {
+  if (!window.selectedPartyId) {
+    alert('削除するパーティーが選択されていません。');
+    return;
+  }
+
+  if (!confirm('本当にこのパーティーを削除しますか？')) {
+    return;
+  }
+
+  try {
+    const response = await fetch('delete_party.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ party_id: window.selectedPartyId })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      showModalWithMessage('出場パーティを変更しました！');
+      location.reload(); // ページをリロード
+    } else {
+      alert('エラー: ' + result.message);
+    }
+  } catch (error) {
+    console.error('通信エラー:', error);
     alert('通信エラーが発生しました。');
   }
 }
@@ -204,16 +245,73 @@ function selectDungeon(dungeonId) {
     }
 }
 
-function startChallenge() {
-    if (selectedDungeonId) {
-        window.location.href = `battle-main.php?dungeon_id=${selectedDungeonId}`;
-    } else {
-        alert('ダンジョンを選択してください。');
-    }
+async function startChallenge() {
+  if (!selectedDungeonId) {
+      alert('ダンジョンを選択してください。');
+      return;
+  }
+
+  try {
+      const response = await fetch('check-dungeon-level.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dungeon_id: selectedDungeonId })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+          window.location.href = `battle-main.php?dungeon_id=${selectedDungeonId}`;
+      } else {
+          const modalMessage = document.getElementById('modal-message');
+          modalMessage.textContent = result.message;
+
+          const modal = new bootstrap.Modal(document.getElementById('myModal'));
+          modal.show();
+      }
+  } catch (error) {
+      console.error('エラーが発生しました:', error);
+      alert('通信エラーが発生しました。');
+  }
 }
 
 
 function challengeDungeon(dungeonId) {
   // ダンジョンIDをURLに含めてリダイレクト
   window.location.href = `battle-main.php?dungeon_id=${dungeonId}`;
+}
+
+
+function showPartyRegistrationForm() {
+  const formContainer = document.getElementById('party-registration-form-container');
+  formContainer.classList.add('show');
+}
+
+function hidePartyRegistrationForm() {
+  const formContainer = document.getElementById('party-registration-form-container');
+  formContainer.classList.remove('show');
+}
+
+async function submitPartyRegistration() {
+  const form = document.getElementById('party-registration-form');
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch('register-party.php', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      showModalWithMessage('パーティが登録されました！');
+      location.reload(); // ページをリロードして更新
+    } else {
+      alert('エラー: ' + result.message);
+    }
+  } catch (error) {
+    console.error('通信エラーが発生しました:', error);
+    alert('通信エラーが発生しました。');
+  }
 }

@@ -284,9 +284,19 @@ html, body {
   transition: background-color 0.3s, border-color 0.3s; /* アニメーション */
 }
 
-#change-party-btn {
-  margin-top: 10px;
+
+
+.party-head {
+  display: flex; /* 横並びにする */
+  justify-content: space-between; /* 左右に要素を配置 */
+  align-items: center; /* 縦方向を中央揃え */
+  margin-bottom: 10px;
 }
+
+#add-party-btn {
+  margin-right: 70px; /* 必要に応じて左側の余白を設定 */
+}
+
 
 
 /* キャラクターステータスボックスの横並び配置 */
@@ -319,5 +329,33 @@ html, body {
 }
 
 
+.hidden-form {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.3s ease-in-out;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.hidden-form.show {
+  display: block;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
 
 
