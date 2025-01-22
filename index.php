@@ -16,7 +16,7 @@ if (isset($_SESSION['message'])) {
     <title>ブラウザRPG</title>
 </head>
 <body>
-    <h2>アカウント</h2>
+    <h2>アカウントにログインしましょう</h2>
     <form action="login.php" method="POST">
         <label for="username">ユーザー名:</label>
         <input type="text" id="username" name="username" required><br><br>
@@ -26,5 +26,7 @@ if (isset($_SESSION['message'])) {
         
         <button type="submit">ログイン</button>
     </form>
+
+    
 </body>
 </html>

@@ -270,19 +270,41 @@ async function startChallenge() {
   }
 
   try {
-      const response = await fetch('check-dungeon-level.php', {
+      // アクティブなパーティーを確認するためのリクエストを送信
+      const partyResponse = await fetch('check-active-party.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+      });
+
+      const partyResult = await partyResponse.json();
+
+      if (!partyResult.success) {
+          // アクティブなパーティーが存在しない場合、モーダルでエラーメッセージを表示
+          const modalMessage = document.getElementById('modal-message');
+          modalMessage.textContent = partyResult.message;
+
+          const modal = new bootstrap.Modal(document.getElementById('myModal'));
+          modal.show();
+          return;
+      }
+
+      // ダンジョンレベルのチェック
+      const dungeonResponse = await fetch('check-dungeon-level.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ dungeon_id: selectedDungeonId })
       });
 
-      const result = await response.json();
+      const dungeonResult = await dungeonResponse.json();
 
-      if (result.success) {
-          window.location.href = `battle-main.php?dungeon_id=${selectedDungeonId}`;
+      if (dungeonResult.success) {
+          // アクティブなパーティーIDとダンジョンIDをURLに含めてリダイレクト
+          const activePartyId = partyResult.party_id; // check-active-party.phpで返すアクティブパーティーID
+          window.location.href = `battle-main.php?dungeon_id=${selectedDungeonId}&party_id=${activePartyId}`;
       } else {
+          // ダンジョンの条件を満たしていない場合のエラーメッセージ
           const modalMessage = document.getElementById('modal-message');
-          modalMessage.textContent = result.message;
+          modalMessage.textContent = dungeonResult.message;
 
           const modal = new bootstrap.Modal(document.getElementById('myModal'));
           modal.show();

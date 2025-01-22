@@ -29,4 +29,28 @@ class Dungeon {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // ダンジョンをprogress_dungeonsテーブルに追加
+    public function addProgressDungeons($userId) {
+        // dungeonsテーブルから全てのダンジョンを取得
+        $stmt = $this->pdo->query("SELECT id FROM dungeons");
+        $dungeons = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($dungeons) {
+            // progress_dungeonsテーブルに挿入
+            $stmtInsert = $this->pdo->prepare("
+                INSERT INTO progress_dungeons (user_id, dungeon_id, is_completed, is_active, current_floor)
+                VALUES (:user_id, :dungeon_id, 0, 0, 1)
+            ");
+
+            foreach ($dungeons as $dungeon) {
+                $stmtInsert->execute([
+                    ':user_id' => $userId,
+                    ':dungeon_id' => $dungeon['id'], // dungeonsテーブルのid
+                ]);
+            }
+        }
+    }
+
+    
 }

@@ -156,10 +156,10 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
                           <?= htmlspecialchars($party['party_name'], ENT_QUOTES, 'UTF-8') ?>
                       </div>
                       <div class="party-members">
-                          <div class="party-member"><?= htmlspecialchars($party['member1_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
-                          <div class="party-member"><?= htmlspecialchars($party['member2_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
-                          <div class="party-member"><?= htmlspecialchars($party['member3_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
-                          <div class="party-member"><?= htmlspecialchars($party['member4_name'] ?? '不明', ENT_QUOTES, 'UTF-8') ?></div>
+                          <div class="party-member"><?= htmlspecialchars($party['member1_name'] ?? '未設定', ENT_QUOTES, 'UTF-8') ?></div>
+                          <div class="party-member"><?= htmlspecialchars($party['member2_name'] ?? '未設定', ENT_QUOTES, 'UTF-8') ?></div>
+                          <div class="party-member"><?= htmlspecialchars($party['member3_name'] ?? '未設定', ENT_QUOTES, 'UTF-8') ?></div>
+                          <div class="party-member"><?= htmlspecialchars($party['member4_name'] ?? '未設定', ENT_QUOTES, 'UTF-8') ?></div>
                       </div>
                   </div>
               <?php endforeach; ?>

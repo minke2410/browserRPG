@@ -2,56 +2,51 @@
 session_start();
 
 require_once 'db.php';
+require_once 'Character.php';
+require_once 'Dungeon.php';
+require_once 'Item.php';
+require_once 'Party.php';
+require_once 'User.php';
 
-// データベース接続を取得
-$db = new Database();
-$pdo = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // ユーザー名とパスワード（2重入力）をフォームから取得
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];  // 確認用パスワード
+    // ユーザー入力の取得
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-    // パスワードが一致するか確認
-    if ($password !== $confirm_password) {
-        $_SESSION['message'] = 'パスワードが一致しません。もう一度お試しください。';
-        header('Location: insert.php');
+    if (empty($username) || empty($password)) {
+        echo "ユーザー名とパスワードを入力してください。";
         exit;
     }
 
-    // SQL文でデータベースからユーザー情報を取得
-    $sql = "SELECT * FROM users WHERE username = :username";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->execute();
+    try {
+        // データベース接続
+        $db = new Database();
+        $pdo = $db->getConnection();
 
-    // ユーザーが存在するか確認
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        // 新しいユーザーの作成
+        $user = new User($pdo);
+        $userId = $user->createUser($username, $password);
 
-    if ($user) {
-        // すでにユーザーが存在している場合
-        $_SESSION['message'] = 'そのユーザー名は既に使用されています｡他の名前を試して下さい｡';
-        header('Location: insert.php');
-        exit;  
-    } else {
-        // 新しいユーザーを作成
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT); // パスワードをハッシュ化
+        // 初期キャラクターを`characters_inventory`に追加
+        $character = new Character($pdo, $userId);
+        $character->addCharactersToInventory($userId);
 
-        $insert_sql = "INSERT INTO users (username, password) VALUES (:username, :password)";
-        $insert_stmt = $pdo->prepare($insert_sql);
-        $insert_stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        $insert_stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+        // 初期アイテムを`items_inventory`に追加
+        $item = new Item($pdo, $userId);
+        $item->addItemsToInventory($userId);
 
-        if ($insert_stmt->execute()) {
-            $_SESSION['message'] = 'アカウントが作成されました！ログインしてください｡';
-            header('Location: index.php');
-            exit;
-        } else {
-            $_SESSION['message'] = "アカウントの作成に失敗しました。もう一度お試しください。";
-            header('Location: insert.php');
-            exit;
-        }
+        // ダンジョン進捗を`progress_dungeons`に追加
+        $dungeon = new Dungeon($pdo, $userId);
+        $dungeon->addProgressDungeons($userId);
+
+        // 初期パーティーを`parties`に追加
+        // $party = new Party($pdo, $userId);
+        // $party->createDefaultParty($userId);
+
+        $_SESSION['message'] = 'アカウントが作成されました！ログインしてください｡';
+        header('Location: index.php');
+    } catch (Exception $e) {
+        echo "エラーが発生しました: " . $e->getMessage();
     }
-}
-?>
+}?>

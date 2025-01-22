@@ -23,5 +23,28 @@ class Item {
     public function getItems() {
         return $this->items;
     }
+
+    // アイテムをitems_inventoryテーブルに追加
+    public function addItemsToInventory($userId) {
+        // itemsテーブルから全てのアイテムを取得
+        $stmt = $this->pdo->query("SELECT id, item_name, item_text, item_effect FROM items");
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($items) {
+            // items_inventoryテーブルに挿入
+            $stmtInsert = $this->pdo->prepare("
+                INSERT INTO items_inventory (user_id, item_id, quantity)
+                VALUES (:user_id, :item_id, :quantity)
+            ");
+
+            foreach ($items as $item) {
+                $stmtInsert->execute([
+                    ':user_id' => $userId,
+                    ':item_id' => $item['id'], // itemsテーブルのid
+                    ':quantity' => 1           // 初期値として1個
+                ]);
+            }
+        }
+    }
 }
 ?>

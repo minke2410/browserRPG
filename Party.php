@@ -70,6 +70,29 @@ class Party {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['count'] ?? 0;
     }
+
+    public function getActiveParty() {
+        $stmt = $this->pdo->prepare("SELECT * FROM parties WHERE user_id = :user_id AND is_active = 1");
+        $stmt->execute([':user_id' => $this->userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC); // アクティブなパーティーがあれば返す
+    }
+
+    public function createDefaultParty($userId, $partyName, $members) {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO parties (user_id, party_name, member1, member2, member3, member4, is_active)
+            VALUES (:user_id, :party_name, :member1, :member2, :member3, :member4, 1)
+        ");
+        $stmt->execute([
+            ':user_id' => $userId,
+            ':party_name' => $partyName,
+            ':member1' => $members[0] ?? null,
+            ':member2' => $members[1] ?? null,
+            ':member3' => $members[2] ?? null,
+            ':member4' => $members[3] ?? null,
+        ]);
+    }
+    
+    
     
 }
 ?>

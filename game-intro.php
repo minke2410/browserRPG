@@ -17,14 +17,13 @@ $userId = $_SESSION['user_id'];
 
 try {
     // Characterクラスを使って、キャラクター情報を取得
-    $characterObj = new Character($pdo, $userId);
-    $characters = $characterObj->getCharacters();
+    $character = new Character($pdo, $userId);
 
     // 主人公が作成されていない場合、作成フォームを表示
-    if (empty($characters)) {
+    if ($character->hasSpecificCharacter(0, '主人公')) {
         showCharacterCreationForm();
     } else {
-        showCharacterData($characters);
+        showCharacterData($character);
     }
 
 } catch (PDOException $e) {
@@ -44,21 +43,21 @@ function showCharacterCreationForm() {
 }
 
 // キャラクター情報を表示
-function showCharacterData($characters) {
+function showCharacterData($character) {
     echo '<h2>セーブデータを確認しました｡</h2>';
     echo '<p>さあ､冒険に出ましょう｡</p>';
     echo '<a href="game-main.php">冒険を続ける</a>';
 
-    // 最初のキャラクターを取得（リストから最初のキャラクター）
-    $character = $characters[0]; 
+    // 主人公を取得（リストから最初のキャラクター）
+    $maincharacter = $character->getCharacterById(0);
 
     echo '<h3>セーブデータ</h3>';
-    echo '<p>主人公の名前: ' . htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') . '</p>';
-    echo '<p>レベル: ' . $character['level'] . '</p>';
-    echo '<p>HP: ' . $character['hp'] . '</p>';
-    echo '<p>経験値: ' . $character['xp'] . '</p>';
-    echo '<p>攻撃力: ' . $character['attack'] . '</p>';
-    echo '<p>最終更新: ' . $character['updated_at'] . '</p>';
+    echo '<p>主人公の名前: ' . htmlspecialchars($maincharacter['name'], ENT_QUOTES, 'UTF-8') . '</p>';
+    echo '<p>レベル: ' . $maincharacter['level'] . '</p>';
+    echo '<p>HP: ' . $maincharacter['hp'] . '</p>';
+    echo '<p>経験値: ' . $maincharacter['xp'] . '</p>';
+    echo '<p>攻撃力: ' . $maincharacter['attack'] . '</p>';
+    echo '<p>最終更新: ' . $maincharacter['updated_at'] . '</p>';
 }
 
 ?>

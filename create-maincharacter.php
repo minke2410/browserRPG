@@ -23,13 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mc-name'])) {
     
     $mcName = htmlspecialchars($mcName, ENT_QUOTES, 'UTF-8');
     
-    // Character クラスを使って主人公を作成
-    $character = new Character($pdo, $userId);
-    $message = $character->createMainCharacter($mcName);
+    // Character クラスを使って主人公の名前を更新
+    try {
+        $character = new Character($pdo, $userId);
+        $character->updateMainCharacterName($mcName);
 
-    echo $message;
-    echo '<p>さあ､冒険に出ましょう｡</p>';
-    echo '<a href="game-intro.php">冒険を続ける</a>';
+        echo '<p>主人公の名前が変更されました｡</p>';
+        echo '<p>さあ､冒険に出ましょう｡</p>';
+        echo '<a href="game-intro.php">ゲームを開始する</a>';
+    } catch (Exception $e) {
+        echo '<p>エラー: ' . $e->getMessage() . '</p>';
+    }
 } else {
     showCharacterCreationForm();
 
