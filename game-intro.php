@@ -56,7 +56,7 @@ function showCharacterData($characters) {
     echo '<p>主人公の名前: ' . htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') . '</p>';
     echo '<p>レベル: ' . $character['level'] . '</p>';
     echo '<p>HP: ' . $character['hp'] . '</p>';
-    echo '<p>XP: ' . $character['xp'] . '</p>';
+    echo '<p>経験値: ' . $character['xp'] . '</p>';
     echo '<p>攻撃力: ' . $character['attack'] . '</p>';
     echo '<p>最終更新: ' . $character['updated_at'] . '</p>';
 }

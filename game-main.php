@@ -143,7 +143,9 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
           <div class="party-head">
             <h3>パーティー一覧</h3>
             <!-- 新規登録ボタン -->
-            <button id="add-party-btn" class="btn btn-primary" onclick="showPartyRegistrationForm()">新規登録</button>
+            <button id="add-party-btn" class="btn btn-primary" onclick="checkPartyLimit()">
+              新規登録
+            </button>
           </div>
           <div class="party-list">
               <?php foreach ($parties as $party): ?>
@@ -217,7 +219,7 @@ $currentSection = isset($_SESSION['section']) ? $_SESSION['section'] : 'characte
       for ($i = 1; $i <= 4; $i++): ?>
         <div class="form-group">
           <label for="member<?= $i ?>">メンバー<?= $i ?></label>
-          <select id="member<?= $i ?>" name="member<?= $i ?>" class="form-select">
+          <select id="member<?= $i ?>" name="member<?= $i ?>" class="form-select character-select">
             <option value="">選択してください</option>
             <?php foreach ($characters as $character): ?>
               <option value="<?= $character['id'] ?>"><?= htmlspecialchars($character['name'], ENT_QUOTES, 'UTF-8') ?></option>

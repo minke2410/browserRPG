@@ -3,6 +3,7 @@
 session_start();
 
 require_once 'db.php';
+require_once 'Party.php';
 
 header('Content-Type: application/json');
 
@@ -26,24 +27,13 @@ if ($partyId === null) {
 try {
     $database = new Database();
     $pdo = $database->getConnection();
+    $party = new Party($pdo, $userId);
 
     // パーティーが現在のユーザーのものであるか確認
-    $sql = "SELECT user_id FROM parties WHERE id = :party_id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['party_id' => $partyId]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $party->deleteParty($partyId, $userId);
 
-    if (!$result || $result['user_id'] !== $userId) {
-        echo json_encode(['success' => false, 'message' => 'このパーティーを削除する権限がありません。']);
-        exit;
-    }
 
-    // パーティーを削除
-    $sqlDelete = "DELETE FROM parties WHERE id = :party_id";
-    $stmtDelete = $pdo->prepare($sqlDelete);
-    $stmtDelete->execute(['party_id' => $partyId]);
-
-    echo json_encode(['success' => true]);
+    echo json_encode($result);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'エラーが発生しました: ' . $e->getMessage()]);
 }

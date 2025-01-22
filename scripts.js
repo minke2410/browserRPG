@@ -101,22 +101,36 @@ function toggleCharacterDetails(characterId) {
 // }
 
 /**
- * モーダルにメッセージを表示
+/**
+ * 
+ * 
+ * モーダルにメッセージを表示し、閉じた際にリダイレクトを実行
  * @param {string} message 表示するメッセージ
+ * @param {string} redirectUrl リダイレクト先のURL
  */
-function showModalWithMessage(message) {
-  // メッセージ要素を取得
+function showModalWithMessage(message, redirectUrl) {
   const modalMessageElement = document.getElementById('modal-message');
-  
   if (modalMessageElement) {
-      modalMessageElement.textContent = message; // メッセージを設定
+    modalMessageElement.textContent = message; // メッセージを設定
   }
 
-  // Bootstrapモーダルのインスタンスを作成して表示
   const modalElement = document.getElementById('myModal');
   const modal = new bootstrap.Modal(modalElement);
+
+  // 現在のセクションを取得
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentSection = urlParams.get('section') || 'characters'; // デフォルトは'characters'
+
+  // モーダルが閉じられたときにリダイレクトを実行
+  modalElement.addEventListener('hidden.bs.modal', () => {
+    if (redirectUrl) {
+      window.location.href = `${redirectUrl}?section=${currentSection}`;
+    }
+  });
+
   modal.show();
 }
+
 
 
 
@@ -135,7 +149,7 @@ function selectParty(partyId) {
         partyItem.classList.add('selected');
         // 選択されたパーティーIDを保存
         window.selectedPartyId = partyId;
-        // 変更ボタンを表示
+        // 変更･削除ボタンを表示
         document.getElementById('change-party-btn').style.display = 'inline-block';
         document.getElementById('delete-party-btn').style.display = 'inline-block';
     } else {
@@ -184,7 +198,7 @@ async function changeParty() {
     const result = await parseResponseJson(response);
 
     if (result.success) {
-      showModalWithMessage('出場パーティを変更しました！');
+      showModalWithMessage('出場パーティを変更しました！', 'game-main.php');
       // location.reload(); // 成功したらページをリロード
     } else {
       alert('エラー: ' + result.message);
@@ -195,6 +209,8 @@ async function changeParty() {
   }
 }
 
+
+
 // 選択したパーティーを削除する
 async function deleteParty() {
   if (!window.selectedPartyId) {
@@ -202,12 +218,14 @@ async function deleteParty() {
     return;
   }
 
+  // 削除の確認
   if (!confirm('本当にこのパーティーを削除しますか？')) {
     return;
   }
 
+
   try {
-    const response = await fetch('delete_party.php', {
+    const response = await fetch('delete-party.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ party_id: window.selectedPartyId })
@@ -216,8 +234,8 @@ async function deleteParty() {
     const result = await response.json();
 
     if (result.success) {
-      showModalWithMessage('出場パーティを変更しました！');
-      location.reload(); // ページをリロード
+      showModalWithMessage('選択したパーティーを削除しました｡', 'game-main.php');
+      // location.reload(); // ページをリロード
     } else {
       alert('エラー: ' + result.message);
     }
@@ -305,8 +323,8 @@ async function submitPartyRegistration() {
     const result = await response.json();
 
     if (result.success) {
-      showModalWithMessage('パーティが登録されました！');
-      location.reload(); // ページをリロードして更新
+      showModalWithMessage('パーティが登録されました！', 'game-main.php');
+      // location.reload(); // ページをリロードして更新
     } else {
       alert('エラー: ' + result.message);
     }
@@ -315,3 +333,49 @@ async function submitPartyRegistration() {
     alert('通信エラーが発生しました。');
   }
 }
+
+async function checkPartyLimit() {
+  try {
+      const response = await fetch('check-party-limit.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+          // 制限以内ならフォームを表示
+          showPartyRegistrationForm();
+      } else {
+          // 制限を超えている場合はモーダルを表示
+          showModalWithMessage(result.message, 'game-main.php');
+      }
+  } catch (error) {
+      console.error('通信エラーが発生しました:', error);
+      alert('通信エラーが発生しました。');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const selects = document.querySelectorAll('.character-select');
+
+  selects.forEach(select => {
+    select.addEventListener('change', () => {
+      // 選択済みの値を取得
+      const selectedValues = Array.from(selects)
+        .map(s => s.value)
+        .filter(val => val !== ''); // 空の選択肢を除外
+
+      // 各selectのオプションを更新
+      selects.forEach(s => {
+        Array.from(s.options).forEach(option => {
+          if (selectedValues.includes(option.value) && s.value !== option.value) {
+            option.style.display = 'none'; // 選択済みの値は非表示
+          } else {
+            option.style.display = ''; // それ以外は表示
+          }
+        });
+      });
+    });
+  });
+});

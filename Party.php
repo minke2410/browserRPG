@@ -31,5 +31,45 @@ class Party {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function deleteParty($partyId, $userId) {
+        try {
+            // ユーザーのパーティーかどうかを確認
+            $sql = "SELECT user_id FROM parties WHERE id = :party_id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(['party_id' => $partyId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // 結果が空の場合のエラー処理を追加
+            if (!$result) {
+                echo json_encode(['success' => false, 'message' => '指定されたパーティーは存在しません。']);
+                exit;
+            }
+
+            if ($result['user_id'] !== $userId) {
+                echo json_encode(['success' => false, 'message' => 'このパーティーを削除する権限がありません。']);
+                exit;
+            }
+
+            // パーティーを削除
+            $sql = "DELETE FROM parties WHERE id = :party_id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(['party_id' => $partyId]);
+
+            return ['success' => true, 'message' => 'パーティーが削除されました。'];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'エラーが発生しました: ' . $e->getMessage()];
+        }
+    }
+
+    public function getPartyCount($userId) {
+        $sql = "SELECT COUNT(*) as count FROM parties WHERE user_id = :user_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] ?? 0;
+    }
+    
 }
 ?>

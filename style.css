@@ -297,6 +297,11 @@ html, body {
   margin-right: 70px; /* 必要に応じて左側の余白を設定 */
 }
 
+#change-party-btn,
+#delete-party-btn {
+  margin-top: 50px; /* ボタン同士や他要素との間にスペースを追加 */
+  font-size: 14px;
+}
 
 
 /* キャラクターステータスボックスの横並び配置 */
